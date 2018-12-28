@@ -1,0 +1,4 @@
+sys:1: DtypeWarning: Columns (10,30) have mixed types. Specify dtype option on import or set low_memory=False.
+sys:1: DtypeWarning: Columns (10) have mixed types. Specify dtype option on import or set low_memory=False.
+sys:1: DtypeWarning: Columns (6,10,30) have mixed types. Specify dtype option on import or set low_memory=False.
+sys:1: DtypeWarning: Columns (6,8,10,12,14,16,22,30) have mixed types. Specify dtype option on import or set low_memory=False.

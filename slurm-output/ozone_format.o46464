@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "ozone_format.py", line 55, in <module>
+    data['epoch'] = epoch_list
+  File "/project/cacds/apps/Anaconda3/python-3.7/lib/python3.7/site-packages/pandas/core/frame.py", line 3119, in __setitem__
+    self._set_item(key, value)
+  File "/project/cacds/apps/Anaconda3/python-3.7/lib/python3.7/site-packages/pandas/core/frame.py", line 3194, in _set_item
+    value = self._sanitize_column(key, value)
+  File "/project/cacds/apps/Anaconda3/python-3.7/lib/python3.7/site-packages/pandas/core/frame.py", line 3391, in _sanitize_column
+    value = _sanitize_index(value, self.index, copy=False)
+  File "/project/cacds/apps/Anaconda3/python-3.7/lib/python3.7/site-packages/pandas/core/series.py", line 4001, in _sanitize_index
+    raise ValueError('Length of values does not match length of ' 'index')
+ValueError: Length of values does not match length of index

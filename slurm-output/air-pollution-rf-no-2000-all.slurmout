@@ -1,0 +1,17 @@
+/project/cacds/apps/Anaconda3/python-3.7/lib/python3.7/site-packages/pandas/core/ops.py:1167: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+  result = method(y)
+/project/cacds/apps/Anaconda3/python-3.7/lib/python3.7/site-packages/sklearn/ensemble/weight_boosting.py:29: DeprecationWarning: numpy.core.umath_tests is an internal NumPy module and should not be imported. It will be removed in a future NumPy release.
+  from numpy.core.umath_tests import inner1d
+[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:  5.1min finished
+[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:    2.3s finished
+[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:   58.7s finished
+[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:    0.4s finished
+[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:   58.8s finished
+[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:    0.5s finished
+[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:   58.6s finished
+[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:    0.5s finished
+[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:   58.7s finished
+[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:    0.5s finished
+0.9141757907347899
+Mean absolute errors: [-3.58934242 -3.64138329 -3.6130412  -3.62072264]
+-3.6161223891304877
