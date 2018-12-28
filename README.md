@@ -1,1 +1,3 @@
-# Air-Pollution \n Use data00_100000_clean.csv (sample of 100,000 rows of data from the year 2000), along with rf_10.pkl which is a random forest of 10 trees. The iPython notebooks will be the most up to date. 
+# Air-Pollution 
+
+For the most up-to-date work look on the cluster.
