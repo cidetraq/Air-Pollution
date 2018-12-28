@@ -1,3 +1,5 @@
 data-sample/large
 models/sample_100k_2000
 models/rf-no-all-2000-2-sample.pkl
+.ipynb_checkpoints
+.DS_Store
