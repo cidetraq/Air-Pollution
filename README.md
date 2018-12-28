@@ -1,1 +1,7 @@
-# Air-Pollution \n Use data00_100000_clean.csv (sample of 100,000 rows of data from the year 2000), along with rf_10.pkl which is a random forest of 10 trees. The iPython notebooks will be the most up to date. 
+# Air-Pollution 
+
+Update 12/28/18:
+
+Both Carroll and Nicholas have achieved great results in mean absolute error and mean squared error metrics using random forest and a LSTM. FFT was tried with little advantage in using it. The next step will be wavelet-transform. 
+
+Work at scale on the cluster.
