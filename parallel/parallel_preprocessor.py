@@ -27,25 +27,18 @@ class SiteProcessor(multiprocessing.Process):
         parent_cmd_pipe, child_cmd_pipe = multiprocessing.Pipe()
         parent_response_pipe, child_response_pipe = multiprocessing.Pipe()
 
-        self.data_pip = parent_data_pipe
-        self.write_pipe = parent_cmd_pipe
-        self.read_pipe = parent_response_pipe
+        self.data_pipe = parent_data_pipe
+        self.cmd_pipe = parent_cmd_pipe
+        self.response_pipe = parent_response_pipe
 
         multiprocessing.Process.__init__(self, target=self._procedure,
-                                         args=[site, child_data_pipe, child_cmd_pipe, child_response_pipe,
-                                               self.wakeup_event, self.data_event, self.idle_event, self.finished_event,
-                                               self.cmd_event])
+                                         args=[site, child_data_pipe, child_cmd_pipe, child_response_pipe])
 
     def _procedure(self, args):
         self.site = args[0][0]
         self.data_pipe = args[0][1]
         self.cmd_pipe = args[0][2]
         self.response_pipe = args[0][3]
-        self.wakeup_event = args[0][4]
-        self.data_event = args[0][5]
-        self.idle_event = args[0][6]
-        self.finished_event = args[0][7]
-        self.cmd_event = args[0][8]
 
         while not self.finished_event.is_set():
 
@@ -67,15 +60,21 @@ class SiteProcessor(multiprocessing.Process):
             if self.finished_event.is_set():
                 break
 
-        self._save()
-
     def _process_data(self):
-        # TODO
-        pass
+        nd = self.data_pipe.recv()
+        nd = self.window_function.process(nd)
+        nd = self.sequence_builder.process(nd)
+        self.sequence_feature_enricher.process(nd)
 
     def _process_cmd(self):
-        # TODO
-        pass
+        cmd, data = self.cmd_pipe.recv()
+        if cmd == "get_minmax":
+            self.response_pipe.send(self.window_function.minmax)
+        elif cmd == "set_minmax":
+            self.window_function.minmax = self.data_pipe.recv()
+        elif cmd == "save_and_quit":
+            self._save()
+            self.finished_event.set()
 
     def _save(self):
         # TODO
@@ -89,8 +88,13 @@ class SiteProcessor(multiprocessing.Process):
         self.wakeup_event.set()
 
     def givejob(self, job):
-        self.read_pipe.send(job)
+        self.response_pipe.send(job)
         self.data_event.set()
+        self.wakeup_event.set()
+
+    def cmd(self, cmd, data=None):
+        self.cmd_pipe.send([cmd, data])
+        self.cmd_event.set()
         self.wakeup_event.set()
 
 
@@ -100,7 +104,7 @@ class SiteProcessor(multiprocessing.Process):
     year_end=("Year to stop with", "option", "e", int),
     num_jobs=("Number of workers simultameously ingesting data. Set to number of cores", "option", "J", int)
 )
-def main(ingest_path: str = '/some/default/path/here', num_jobs: int = 8, year_begin: int = 2000, year_end: int = 2017):
+def main(ingest_path: str = '/some/default/path/here', num_jobs: int = 8, year_begin: int = 2000, year_end: int = 2018):
     workers = {}
 
     for year in range(year_begin, year_end):

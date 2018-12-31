@@ -35,7 +35,6 @@ class WindowFunction(object):
 
                 windows[int(sample / self.window_size)][i] = window_value
 
-
             sample += self.window_size
 
         # Save leftovers for next window
@@ -120,7 +119,7 @@ class SequenceFeatureEnricher(object):
 
             if self.std_features:
                 for f in range(2, d.NUM_INPUTS):
-                    features_to_add.append(np.std(np.array(r)[:, f]))
+                    features_to_add.append(np.std(nd[:, f]))
 
             self.sample_sequences.append(nd[sequence])
             self.sequence_features.append(features_to_add)
