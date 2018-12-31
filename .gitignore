@@ -4,3 +4,4 @@ models/rf-no-all-2000-2-sample.pkl
 models/rf-no-all-2000.pkl
 .ipynb_checkpoints
 .DS_Store
+.idea
