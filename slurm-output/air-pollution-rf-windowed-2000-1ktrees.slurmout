@@ -1,0 +1,10 @@
+Sample Hours: 1.000000
+Prediction Window: 24
+Sequence Length: 168
+Using already created windowed predictions for year 2000
+(123240, 13608)
+(123240, 4)
+Traceback (most recent call last):
+  File "../python-scripts/pol_forest_nicholas.py", line 138, in <module>
+    data.dump('/project/lindner/moving/summer2018/2019/data-intermediate/rf-windowed-2000-data-processed.ndarray')
+OverflowError: cannot serialize a string larger than 4GiB
