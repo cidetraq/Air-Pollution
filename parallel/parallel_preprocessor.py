@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import multiprocessing
 import plac
 import os
@@ -72,9 +73,11 @@ class SiteProcessor(multiprocessing.Process):
             self.response_pipe.send(self.window_function.minmax)
         elif cmd == "set_minmax":
             self.window_function.minmax = self.data_pipe.recv()
-        elif cmd == "save_and_quit":
+            self.response_pipe.send(None)
+        elif cmd == "save_and_shutdown":
             self._save()
             self.finished_event.set()
+            self.response_pipe.send(None)
 
     def _save(self):
         # TODO
@@ -96,6 +99,36 @@ class SiteProcessor(multiprocessing.Process):
         self.cmd_pipe.send([cmd, data])
         self.cmd_event.set()
         self.wakeup_event.set()
+        return self.response_pipe.recv()
+
+
+class WorkerManager(object):
+    def __init__(self, num_jobs):
+        self.num_jobs = num_jobs
+        self.workers = {}
+
+    def __getitem__(self, key):
+        return self.workers[key]
+
+    def __iter__(self):
+        return self.workers.keys()
+
+    def addworker(self, site):
+        self.workers[site] = SiteProcessor(site)
+        self.workers[site].start()
+
+    def wait(self):
+        # Wait for jobs to finish
+        while True:
+            jobs = 0
+
+            for site in self.workers:
+                jobs += 1 if not self.workers[site].idle_event.is_set() else 0
+
+            if jobs < self.num_jobs:
+                break
+
+            sleep(0.1)
 
 
 @plac.annotations(
@@ -105,7 +138,7 @@ class SiteProcessor(multiprocessing.Process):
     num_jobs=("Number of workers simultameously ingesting data. Set to number of cores", "option", "J", int)
 )
 def main(ingest_path: str = '/some/default/path/here', num_jobs: int = 8, year_begin: int = 2000, year_end: int = 2018):
-    workers = {}
+    workers = WorkerManager(num_jobs=num_jobs)
 
     for year in range(year_begin, year_end):
         df = pd.read_csv(os.path.join(ingest_path, "%d_mark.csv" % year))
@@ -118,22 +151,38 @@ def main(ingest_path: str = '/some/default/path/here', num_jobs: int = 8, year_b
                 continue
 
             if site not in workers:
-                workers[site] = SiteProcessor(site)
-                workers[site].start()
+                workers.addworker(site)
 
             workers[site].givejob(job)
+            workers.wait()
 
-            # Wait for jobs to finish
-            while True:
-                jobs = 0
+        # Coordinate min/max between all workers
+        minmaxrows = []
+        for site in d.SITES:
+            if site not in workers:
+                continue
+            minmaxrows.append(workers[site].cmd("get_minmax"))
 
-                for site in workers:
-                    jobs += 1 if not workers[site].idle_event.is_set() else 0
+        minmaxrows = np.array(minmaxrows)
+        minmax = np.zeros((d.NUM_INPUTS, 2))
 
-                if jobs < num_jobs:
-                    break
+        for i in d.NUM_INPUTS:
+            minmax[i][0] = np.min(minmaxrows[:, i])
+            minmax[i][1] = np.max(minmaxrows[:, i])
 
-                sleep(0.1)
+        for site in d.SITES:
+            if site not in workers:
+                continue
+
+            workers[site].cmd("set_minmax", minmax)
+
+        # Save and shutdown
+        for site in d.SITES:
+            if site not in workers:
+                continue
+
+            workers[site].cmd("save_and_shutdown")
+            workers.wait()
 
 
 if __name__ == '__init__':

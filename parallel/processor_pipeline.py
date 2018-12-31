@@ -110,10 +110,10 @@ class SequenceFeatureEnricher(object):
 
             if self.regression_features:
                 for f in range(2, d.NUM_INPUTS):
-                    X = [[i] for i in range(0, nd.shape[1])]
-                    Y = [[i] for i in nd[sequence][:, f].tolist()]
+                    x = [[i] for i in range(0, nd.shape[1])]
+                    y = [[i] for i in nd[sequence][:, f].tolist()]
 
-                    lr = LinearRegression().fit(X, Y)
+                    lr = LinearRegression().fit(x, y)
 
                     features_to_add.extend([lr.coef_[0][0], lr.intercept_[0]])
 
