@@ -55,6 +55,11 @@ class SequenceBuilder(object):
 
         self.labels = []
 
+        # So we can map label features back to scaling values
+        self.labels_scaler_map = []
+        for o in range(0, d.NUM_OUTPUTS):
+            self.labels_scaler_map.append(d.INPUT_MAP[d.OUTPUT_COLUMNS[o]])
+
     def process(self, nd: np.ndarray) -> np.ndarray:
 
         if self.leftovers is not None:
@@ -100,6 +105,16 @@ class SequenceFeatureEnricher(object):
 
         self.sample_sequences = []
         self.sequence_features = []
+
+        # So we can map sequence features back to minmax values for scaling
+        self.sequence_features_scalar_map = []
+        if regression_features:
+            for f in range(2, d.NUM_INPUTS):
+                self.sequence_features_scalar_map.append(f)
+                self.sequence_features_scalar_map.append(f)
+        if std_features:
+            for f in range(2, d.NUM_INPUTS):
+                self.sequence_features_scalar_map.append(f)
 
     def process(self, nd: np.ndarray):
 

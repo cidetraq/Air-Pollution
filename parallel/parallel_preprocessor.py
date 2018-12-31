@@ -80,8 +80,39 @@ class SiteProcessor(multiprocessing.Process):
             self.response_pipe.send(None)
 
     def _save(self):
-        # TODO
-        pass
+        minmax = self.window_function.minmax
+
+        # Convert to numpy arrays and scale the values
+        sample_sequences = np.array(self.sequence_feature_enricher.sample_sequences)
+
+        for i in range(0, d.NUM_INPUTS):
+            # Bias to start at zero
+            sample_sequences[:, :, i] -= minmax[i][0]
+
+            # Scale maximum value to 0
+            sample_sequences[:, :, i] /= np.abs(minmax[i][0] - minmax[i][1])
+
+        labels = np.array(self.sequence_builder.labels)
+        label_scaler_map = self.sequence_builder.labels_scaler_map
+
+        for o in range(0, d.NUM_OUTPUTS):
+            # Bias to start at zero
+            labels[:, o] -= minmax[label_scaler_map[o]][0]
+
+            # Scale maximum value to 0
+            labels[:, o] /= np.abs(minmax[label_scaler_map[o]][0] - minmax[label_scaler_map[o]][1])
+
+        sequence_features = np.array(self.sequence_feature_enricher.sequence_features)
+        sequence_features_scalar_map = self.sequence_feature_enricher.sequence_features_scalar_map
+
+        for f, s in enumerate(sequence_features_scalar_map):
+            # Bias to start at zero
+            sequence_features[:, f] -= minmax[s][0]
+
+            # Scale maximum value to 0
+            sequence_features[:, f] /= np.abs(minmax[s][0] - minmax[s][1])
+
+        # TODO: actually save the files
 
     def is_idle(self):
         return self.idle_event.is_set()
