@@ -61,6 +61,9 @@ class SiteProcessor(multiprocessing.Process):
     def _save(self):
         minmax = self.window_function.minmax
 
+        if len(self.sequence_feature_enricher.sample_sequences) == 0:
+            return
+
         # Convert to numpy arrays and scale the values
         sample_sequences = np.array(self.sequence_feature_enricher.sample_sequences)
 
@@ -168,6 +171,8 @@ def transform(df, year):
         df = df[df['o3_flag'] == "K"]
         df = df[df['temp_flag'] == "K"]
     df = df[~df['winddir'].isna()]
+    df = df[~df['AQS_Code'].isna()]
+
     df = df.drop(
         ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
          'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
@@ -183,7 +188,7 @@ def transform(df, year):
     year_begin=("First year to process", "option", "b", int),
     year_end=("Year to stop with", "option", "e", int),
     num_jobs=("Number of workers simultameously ingesting data. Set to number of cores", "option", "J", int),
-    reset_cache=("Do not use existing cache files", "flag")
+    reset_cache=("Do not use existing cache files (rebuild new ones)", "flag")
 )
 def main(ingest_path: str = '/some/default/path/here/input',
          ingest_prefix: str = "",
@@ -212,7 +217,7 @@ def main(ingest_path: str = '/some/default/path/here/input',
             df = transform(df, year)
             df.to_csv(os.path.join(ingest_path, cache_name))
 
-        for site_idx, site in enumerate(d.SITES):
+        for site in df['AQS_Code'].unique():
 
             print("Processing(%s): %s" % (year, site))
 
@@ -254,6 +259,12 @@ def main(ingest_path: str = '/some/default/path/here/input',
 
             workers[site].cmd("save_and_shutdown")
             workers.wait()
+
+        for site in d.SITES:
+            if site not in workers:
+                continue
+            print("Joining: %s" % site)
+            workers[site].join()
 
 
 if __name__ == '__main__':
