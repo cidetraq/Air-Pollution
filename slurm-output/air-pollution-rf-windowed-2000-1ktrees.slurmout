@@ -1,10 +1,21 @@
+/project/cacds/apps/Anaconda3/python-3.7/lib/python3.7/site-packages/sklearn/ensemble/weight_boosting.py:29: DeprecationWarning: numpy.core.umath_tests is an internal NumPy module and should not be imported. It will be removed in a future NumPy release.
+  from numpy.core.umath_tests import inner1d
+[Parallel(n_jobs=-1)]: Done 120 tasks      | elapsed: 57.2min
+[Parallel(n_jobs=-1)]: Done 370 tasks      | elapsed: 172.1min
+[Parallel(n_jobs=-1)]: Done 720 tasks      | elapsed: 323.5min
+[Parallel(n_jobs=-1)]: Done 1000 out of 1000 | elapsed: 439.5min finished
+[Parallel(n_jobs=40)]: Done 120 tasks      | elapsed:    3.3s
+[Parallel(n_jobs=40)]: Done 370 tasks      | elapsed:    7.4s
+[Parallel(n_jobs=40)]: Done 720 tasks      | elapsed:   12.9s
+[Parallel(n_jobs=40)]: Done 1000 out of 1000 | elapsed:   18.0s finished
 Sample Hours: 1.000000
 Prediction Window: 24
 Sequence Length: 168
 Using already created windowed predictions for year 2000
 (123240, 13608)
 (123240, 4)
+1000 tree regressor R^2 score: 
 Traceback (most recent call last):
-  File "../python-scripts/pol_forest_nicholas.py", line 138, in <module>
-    data.dump('/project/lindner/moving/summer2018/2019/data-intermediate/rf-windowed-2000-data-processed.ndarray')
-OverflowError: cannot serialize a string larger than 4GiB
+  File "../python-scripts/pol_forest_nicholas.py", line 264, in <module>
+    if fft_features:
+NameError: name 'fft_features' is not defined

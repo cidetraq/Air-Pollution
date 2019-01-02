@@ -1,0 +1,11 @@
+/project/cacds/apps/Anaconda3/python-3.7/lib/python3.7/site-packages/sklearn/ensemble/weight_boosting.py:29: DeprecationWarning: numpy.core.umath_tests is an internal NumPy module and should not be imported. It will be removed in a future NumPy release.
+  from numpy.core.umath_tests import inner1d
+[Parallel(n_jobs=20)]: Done  10 tasks      | elapsed:    0.8s
+[Parallel(n_jobs=20)]: Done 160 tasks      | elapsed:    7.2s
+[Parallel(n_jobs=20)]: Done 410 tasks      | elapsed:   20.8s
+[Parallel(n_jobs=20)]: Done 760 tasks      | elapsed:   39.7s
+[Parallel(n_jobs=20)]: Done 1000 out of 1000 | elapsed:   52.1s finished
+Sample Hours: 1.000000
+Prediction Window: 24
+Sequence Length: 168
+0.8090558120382274

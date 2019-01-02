@@ -1,0 +1,15 @@
+Sample Hours: 1.000000
+Prediction Window: 24
+Sequence Length: 168
+Sample Hours: 1.000000
+Prediction Window: 24
+Sequence Length: 168
+Created data and labels
+Traceback (most recent call last):
+  File "../python-scripts/pol_lstm_nicholas.py", line 124, in <module>
+    main(args.user, args.window_stride, args.filename)
+  File "../python-scripts/pol_lstm_nicholas.py", line 56, in main
+    model=create_model(data, labels, out_path)
+  File "../python-scripts/pol_lstm_nicholas.py", line 83, in create_model
+    from keras.models import Model
+ModuleNotFoundError: No module named 'keras'
