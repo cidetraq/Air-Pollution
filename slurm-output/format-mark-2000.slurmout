@@ -1,0 +1,11 @@
+sys:1: DtypeWarning: Columns (0,6,8,10,12,14,16,18,20,22,24,26,28) have mixed types. Specify dtype option on import or set low_memory=False.
+/project/cacds/apps/Anaconda3/python-3.7/lib/python3.7/site-packages/pandas/core/ops.py:1167: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+  result = method(y)
+Traceback (most recent call last):
+  File "../python-scripts/format-mark-cmd.py", line 118, in <module>
+    main(args.user, args.years)
+  File "../python-scripts/format-mark-cmd.py", line 37, in main
+    transform(source_path,year,out_path)
+  File "../python-scripts/format-mark-cmd.py", line 59, in transform
+    if year<2014:
+TypeError: '<' not supported between instances of 'str' and 'int'
