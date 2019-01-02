@@ -33,8 +33,9 @@ class SiteProcessor(multiprocessing.Process):
         while True:
 
             self.idle_event.set()
-
             cmd, data = self.cmd_queue.get()
+            self.idle_event.clear()
+
             if cmd == "process_data":
                 self._process_data(data)
             if cmd == "get_minmax":
@@ -47,8 +48,6 @@ class SiteProcessor(multiprocessing.Process):
                 self.response_queue.put(None)
                 self.idle_event.set()
                 return
-
-            self.idle_event.clear()
 
     def _process_data(self, nd):
         nd = self.window_function.process(nd)
@@ -102,7 +101,14 @@ class SiteProcessor(multiprocessing.Process):
             # Scale maximum value to 0
             sequence_features[:, f] /= np.abs(minmax[s][0] - minmax[s][1])
 
-        # np.save(os.path.join(self.output_path, self.site + '_labels.nd'), labels)
+        labels_out_name = '%s_labels_%s.nd' % (self.site, "_".join([str(d) for d in labels.shape]))
+        np.save(os.path.join(self.output_path, labels_out_name), labels)
+
+        sample_sequences_out_name = '%s_data_sample_sequences_%s.nd' % (self.site, "_".join([str(d) for d in sample_sequences.shape]))
+        np.save(os.path.join(self.output_path, sample_sequences_out_name), sample_sequences)
+
+        sequence_features_out_name = '%s_data_sequence_features_%s.nd' % (self.site, "_".join([str(d) for d in sequence_features.shape]))
+        np.save(os.path.join(self.output_path, sequence_features_out_name), sequence_features)
 
     def is_idle(self):
         return self.idle_event.is_set()
@@ -134,7 +140,7 @@ class WorkerManager(object):
 
         self.n += 1
 
-        return [i for i in self.workers.keys()][self.n-1]
+        return [i for i in self.workers.keys()][self.n - 1]
 
     def addworker(self, site: str, output_path: str):
         self.workers[site] = SiteProcessor(site, output_path)
@@ -154,8 +160,7 @@ class WorkerManager(object):
             sleep(0.1)
 
 
-def transform(df, year):
-
+def transform(df: pd.DataFrame, year: int) -> pd.DataFrame:
     df['wind_x_dir'] = df['windspd'] * np.cos(df['winddir'] * (np.pi / 180))
     df['wind_y_dir'] = df['windspd'] * np.sin(df['winddir'] * (np.pi / 180))
     df['hour'] = pd.to_datetime(df['epoch'], unit='s').dt.hour
@@ -194,7 +199,10 @@ def main(ingest_path: str = '/some/default/path/here/input',
          ingest_prefix: str = "",
          ingest_suffix: str = "",
          output_path: str = '/some/default/path/here/output',
-         num_jobs: int = 1, year_begin: int = 2000, year_end: int = 2018, reset_cache=False):
+         num_jobs: int = 1,
+         year_begin: int = 2000,
+         year_end: int = 2018,
+         reset_cache: bool = False):
     workers = WorkerManager(num_jobs=num_jobs)
 
     for year_idx, year in enumerate(range(year_begin, year_end)):
