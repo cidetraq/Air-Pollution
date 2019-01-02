@@ -9,7 +9,7 @@ from time import sleep
 
 
 class SiteProcessor(multiprocessing.Process):
-    def __init__(self, site):
+    def __init__(self, site: str, index: int, output_path: str):
 
         self.window_function = WindowFunction(window_size=d.WINDOW_STRIDE)
         self.sequence_builder = SequenceBuilder(sequence_length=d.SEQUENCE_LENGTH,
@@ -18,79 +18,69 @@ class SiteProcessor(multiprocessing.Process):
         self.sequence_feature_enricher = SequenceFeatureEnricher(regression_features=d.REGRESSION_FEATURES,
                                                                  std_features=d.STD_FEATURES)
 
-        self.finished_event = multiprocessing.Event()
-        self.wakeup_event = multiprocessing.Event()
-        self.data_event = multiprocessing.Event()
         self.idle_event = multiprocessing.Event()
-        self.cmd_event = multiprocessing.Event()
 
-        parent_data_pipe, child_data_pipe = multiprocessing.Pipe()
-        parent_cmd_pipe, child_cmd_pipe = multiprocessing.Pipe()
-        parent_response_pipe, child_response_pipe = multiprocessing.Pipe()
+        self.cmd_queue = multiprocessing.Queue()
+        self.response_queue = multiprocessing.Queue()
 
-        self.data_pipe = parent_data_pipe
-        self.cmd_pipe = parent_cmd_pipe
-        self.response_pipe = parent_response_pipe
+        self.site = site
+        self.index = index
+        self.output_path = output_path
 
-        multiprocessing.Process.__init__(self, target=self._procedure,
-                                         args=[site, child_data_pipe, child_cmd_pipe, child_response_pipe])
+        multiprocessing.Process.__init__(self, target=self._procedure)
 
-    def _procedure(self, args):
-        self.site = args[0][0]
-        self.data_pipe = args[0][1]
-        self.cmd_pipe = args[0][2]
-        self.response_pipe = args[0][3]
+    def _procedure(self):
 
-        while not self.finished_event.is_set():
+        while True:
 
             self.idle_event.set()
-
-            self.wakeup_event.wait()
-            self.wakeup_event.clear()
-
+            cmd, data = self.cmd_queue.get()
             self.idle_event.clear()
 
-            if self.cmd_event.is_set():
-                self._process_cmd()
-                self.cmd_event.clear()
+            if cmd == "process_data":
+                self._process_data(data)
+            if cmd == "get_minmax":
+                self.response_queue.put(self.window_function.minmax)
+            elif cmd == "set_minmax":
+                self.window_function.minmax = data
+                self.response_queue.put(None)
+            elif cmd == "save_and_shutdown":
+                self._save()
+                self.response_queue.put(None)
+                self.idle_event.set()
+                return
 
-            if self.data_event.is_set():
-                self._process_data()
-                self.data_event.clear()
-
-            if self.finished_event.is_set():
-                break
-
-    def _process_data(self):
-        nd = self.data_pipe.recv()
+    def _process_data(self, nd):
         nd = self.window_function.process(nd)
-        nd = self.sequence_builder.process(nd)
-        self.sequence_feature_enricher.process(nd)
 
-    def _process_cmd(self):
-        cmd, data = self.cmd_pipe.recv()
-        if cmd == "get_minmax":
-            self.response_pipe.send(self.window_function.minmax)
-        elif cmd == "set_minmax":
-            self.window_function.minmax = self.data_pipe.recv()
-            self.response_pipe.send(None)
-        elif cmd == "save_and_shutdown":
-            self._save()
-            self.finished_event.set()
-            self.response_pipe.send(None)
+        nd = self.sequence_builder.process(nd)
+
+        if nd is not None:
+            self.sequence_feature_enricher.process(nd)
 
     def _save(self):
         minmax = self.window_function.minmax
+
+        if len(self.sequence_feature_enricher.sample_sequences) == 0:
+            return
 
         # Convert to numpy arrays and scale the values
         sample_sequences = np.array(self.sequence_feature_enricher.sample_sequences)
 
         for i in range(0, d.NUM_INPUTS):
+
             # Bias to start at zero
-            sample_sequences[:, :, i] -= minmax[i][0]
+            bias = -minmax[i][0]
+            sample_sequences[:, :, i] += bias
 
             # Scale maximum value to 0
-            sample_sequences[:, :, i] /= np.abs(minmax[i][0] - minmax[i][1])
+            scale = np.abs(minmax[i][1] - minmax[i][0])
+
+            if scale != 0:
+                sample_sequences[:, :, i] /= scale
+            else:
+                # If everything is the same, set everything to 0.
+                sample_sequences[:, :, i] = 0
 
         labels = np.array(self.sequence_builder.labels)
         label_scaler_map = self.sequence_builder.labels_scaler_map
@@ -112,25 +102,29 @@ class SiteProcessor(multiprocessing.Process):
             # Scale maximum value to 0
             sequence_features[:, f] /= np.abs(minmax[s][0] - minmax[s][1])
 
-        # TODO: actually save the files
+        def _save(nd: np.ndarray, name: str):
+            out_name = '%0.3d_%s.nd' % (self.index, name)
+            out_desc_name = '%0.3d_%s.nd.desc' % (self.index, name)
+
+            np.save(os.path.join(self.output_path, out_name), nd)
+
+            description = "%s\n%s" % (str(nd.dtype), str(nd.shape))
+            open(os.path.join(self.output_path, out_desc_name), "w").write(description)
+
+        _save(labels, "labels")
+        _save(sample_sequences, "sequences")
+        _save(sequence_features, "sequence_features")
 
     def is_idle(self):
         return self.idle_event.is_set()
 
-    def finished(self):
-        self.finished_event.set()
-        self.wakeup_event.set()
-
     def givejob(self, job):
-        self.response_pipe.send(job)
-        self.data_event.set()
-        self.wakeup_event.set()
+        self.cmd_queue.put(['process_data', job])
 
     def cmd(self, cmd, data=None):
-        self.cmd_pipe.send([cmd, data])
-        self.cmd_event.set()
-        self.wakeup_event.set()
-        return self.response_pipe.recv()
+        self.cmd_queue.put([cmd, data])
+
+        return self.response_queue.get()
 
 
 class WorkerManager(object):
@@ -142,10 +136,19 @@ class WorkerManager(object):
         return self.workers[key]
 
     def __iter__(self):
-        return self.workers.keys()
+        self.n = 0
+        return self
 
-    def addworker(self, site):
-        self.workers[site] = SiteProcessor(site)
+    def __next__(self):
+        if self.n == len(self.workers):
+            raise StopIteration
+
+        self.n += 1
+
+        return [i for i in self.workers.keys()][self.n - 1]
+
+    def addworker(self, site: str, index: int, output_path: str):
+        self.workers[site] = SiteProcessor(site, index, output_path)
         self.workers[site].start()
 
     def wait(self):
@@ -162,59 +165,123 @@ class WorkerManager(object):
             sleep(0.1)
 
 
+def transform(df: pd.DataFrame, year: int) -> pd.DataFrame:
+    df['wind_x_dir'] = df['windspd'] * np.cos(df['winddir'] * (np.pi / 180))
+    df['wind_y_dir'] = df['windspd'] * np.sin(df['winddir'] * (np.pi / 180))
+    df['hour'] = pd.to_datetime(df['epoch'], unit='s').dt.hour
+
+    if year < 2014:
+        df = df[df['nox_flag'] == 'VAL']
+        df = df[df['no_flag'] == 'VAL']
+        df = df[df['o3_flag'] == "VAL"]
+        df = df[df['temp_flag'] == "VAL"]
+    if year >= 2014:
+        df = df[df['nox_flag'] == 'VAL']
+        df = df[df['no_flag'] == 'VAL']
+        df = df[df['o3_flag'] == "K"]
+        df = df[df['temp_flag'] == "K"]
+    df = df[~df['winddir'].isna()]
+    df = df[~df['AQS_Code'].isna()]
+
+    df = df.drop(
+        ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
+         'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
+         'temp_flag'], axis=1)
+    return df
+
+
 @plac.annotations(
     ingest_path=("Path containing the data files to ingest", "option", "P", str),
+    ingest_prefix=("{$prefix}year.csv", "option", "p", str),
+    ingest_suffix=("year{$suffix}.csv", "option", "s", str),
+    output_path=("Path to write the resulting numpy sequences", "option", "o", str),
     year_begin=("First year to process", "option", "b", int),
     year_end=("Year to stop with", "option", "e", int),
-    num_jobs=("Number of workers simultameously ingesting data. Set to number of cores", "option", "J", int)
+    num_jobs=("Number of workers simultameously ingesting data. Set to number of cores", "option", "J", int),
+    reset_cache=("Do not use existing cache files (rebuild new ones)", "flag")
 )
-def main(ingest_path: str = '/some/default/path/here', num_jobs: int = 8, year_begin: int = 2000, year_end: int = 2018):
+def main(ingest_path: str = '/some/default/path/here/input',
+         ingest_prefix: str = "",
+         ingest_suffix: str = "",
+         output_path: str = '/some/default/path/here/output',
+         num_jobs: int = 1,
+         year_begin: int = 2000,
+         year_end: int = 2018,
+         reset_cache: bool = False):
     workers = WorkerManager(num_jobs=num_jobs)
 
-    for year in range(year_begin, year_end):
-        df = pd.read_csv(os.path.join(ingest_path, "%d_mark.csv" % year))
+    site_index = 0
 
-        for site in d.SITES:
+    for year_idx, year in enumerate(range(year_begin, year_end)):
 
-            job = df[df['site'] == site].values()
+        input_name = "%s%d%s.csv" % (ingest_prefix, year, ingest_suffix)
+        cache_name = input_name + '.cache'
+
+        print("Processing: %s" % input_name)
+
+        if not reset_cache:
+            try:
+                df = pd.read_csv(os.path.join(ingest_path, cache_name))
+                print("Loaded %s from cache" % input_name)
+            except FileNotFoundError:
+                df = pd.read_csv(os.path.join(ingest_path, input_name))
+                df = transform(df, year)
+                df.to_csv(os.path.join(ingest_path, cache_name))
+        else:
+            df = pd.read_csv(os.path.join(ingest_path, input_name))
+            df = transform(df, year)
+            df.to_csv(os.path.join(ingest_path, cache_name))
+
+        for site in df['AQS_Code'].unique():
+
+            print("Processing(%s): %s" % (year, site))
+
+            job = df[df['AQS_Code'] == site][d.INPUT_COLUMNS].values
 
             if len(job) == 0:
                 continue
 
             if site not in workers:
-                workers.addworker(site)
+                workers.addworker(site, site_index, output_path)
+                site_index += 1
 
             workers[site].givejob(job)
             workers.wait()
 
-        # Coordinate min/max between all workers
-        minmaxrows = []
-        for site in d.SITES:
-            if site not in workers:
-                continue
-            minmaxrows.append(workers[site].cmd("get_minmax"))
+    # Coordinate min/max between all workers
+    minmaxrows = []
+    for site in d.SITES:
+        if site not in workers:
+            continue
+        minmaxrows.append(workers[site].cmd("get_minmax"))
 
-        minmaxrows = np.array(minmaxrows)
-        minmax = np.zeros((d.NUM_INPUTS, 2))
+    minmaxrows = np.array(minmaxrows)
+    minmax = np.zeros((d.NUM_INPUTS, 2))
 
-        for i in d.NUM_INPUTS:
-            minmax[i][0] = np.min(minmaxrows[:, i])
-            minmax[i][1] = np.max(minmaxrows[:, i])
+    for i in range(0, d.NUM_INPUTS):
+        minmax[i][0] = np.min(minmaxrows[:, i])
+        minmax[i][1] = np.max(minmaxrows[:, i])
 
-        for site in d.SITES:
-            if site not in workers:
-                continue
+    for site in d.SITES:
+        if site not in workers:
+            continue
 
-            workers[site].cmd("set_minmax", minmax)
+        workers[site].cmd("set_minmax", minmax)
 
-        # Save and shutdown
-        for site in d.SITES:
-            if site not in workers:
-                continue
+    # Save and shutdown
+    for site in d.SITES:
+        if site not in workers:
+            continue
 
-            workers[site].cmd("save_and_shutdown")
-            workers.wait()
+        workers[site].cmd("save_and_shutdown")
+        workers.wait()
+
+    for site in d.SITES:
+        if site not in workers:
+            continue
+        print("Joining: %s" % site)
+        workers[site].join()
 
 
-if __name__ == '__init__':
+if __name__ == '__main__':
     plac.call(main)
