@@ -9,7 +9,7 @@ from time import sleep
 
 
 class SiteProcessor(multiprocessing.Process):
-    def __init__(self, site, output_path):
+    def __init__(self, site: str, index: int, output_path: str):
 
         self.window_function = WindowFunction(window_size=d.WINDOW_STRIDE)
         self.sequence_builder = SequenceBuilder(sequence_length=d.SEQUENCE_LENGTH,
@@ -24,6 +24,7 @@ class SiteProcessor(multiprocessing.Process):
         self.response_queue = multiprocessing.Queue()
 
         self.site = site
+        self.index = index
         self.output_path = output_path
 
         multiprocessing.Process.__init__(self, target=self._procedure)
@@ -101,14 +102,18 @@ class SiteProcessor(multiprocessing.Process):
             # Scale maximum value to 0
             sequence_features[:, f] /= np.abs(minmax[s][0] - minmax[s][1])
 
-        labels_out_name = '%s_labels_%s.nd' % (self.site, "_".join([str(d) for d in labels.shape]))
-        np.save(os.path.join(self.output_path, labels_out_name), labels)
+        def _save(nd: np.ndarray, name: str):
+            out_name = '%0.3d_%s.nd' % (self.index, name)
+            out_desc_name = '%0.3d_%s.nd.desc' % (self.index, name)
 
-        sample_sequences_out_name = '%s_data_sample_sequences_%s.nd' % (self.site, "_".join([str(d) for d in sample_sequences.shape]))
-        np.save(os.path.join(self.output_path, sample_sequences_out_name), sample_sequences)
+            np.save(os.path.join(self.output_path, out_name), nd)
 
-        sequence_features_out_name = '%s_data_sequence_features_%s.nd' % (self.site, "_".join([str(d) for d in sequence_features.shape]))
-        np.save(os.path.join(self.output_path, sequence_features_out_name), sequence_features)
+            description = "%s\n%s" % (str(nd.dtype), str(nd.shape))
+            open(os.path.join(self.output_path, out_desc_name), "w").write(description)
+
+        _save(labels, "labels")
+        _save(sample_sequences, "sequences")
+        _save(sequence_features, "sequence_features")
 
     def is_idle(self):
         return self.idle_event.is_set()
@@ -142,8 +147,8 @@ class WorkerManager(object):
 
         return [i for i in self.workers.keys()][self.n - 1]
 
-    def addworker(self, site: str, output_path: str):
-        self.workers[site] = SiteProcessor(site, output_path)
+    def addworker(self, site: str, index: int, output_path: str):
+        self.workers[site] = SiteProcessor(site, index, output_path)
         self.workers[site].start()
 
     def wait(self):
@@ -205,6 +210,8 @@ def main(ingest_path: str = '/some/default/path/here/input',
          reset_cache: bool = False):
     workers = WorkerManager(num_jobs=num_jobs)
 
+    site_index = 0
+
     for year_idx, year in enumerate(range(year_begin, year_end)):
 
         input_name = "%s%d%s.csv" % (ingest_prefix, year, ingest_suffix)
@@ -235,44 +242,45 @@ def main(ingest_path: str = '/some/default/path/here/input',
                 continue
 
             if site not in workers:
-                workers.addworker(site, output_path)
+                workers.addworker(site, site_index, output_path)
+                site_index += 1
 
             workers[site].givejob(job)
             workers.wait()
 
-        # Coordinate min/max between all workers
-        minmaxrows = []
-        for site in d.SITES:
-            if site not in workers:
-                continue
-            minmaxrows.append(workers[site].cmd("get_minmax"))
+    # Coordinate min/max between all workers
+    minmaxrows = []
+    for site in d.SITES:
+        if site not in workers:
+            continue
+        minmaxrows.append(workers[site].cmd("get_minmax"))
 
-        minmaxrows = np.array(minmaxrows)
-        minmax = np.zeros((d.NUM_INPUTS, 2))
+    minmaxrows = np.array(minmaxrows)
+    minmax = np.zeros((d.NUM_INPUTS, 2))
 
-        for i in range(0, d.NUM_INPUTS):
-            minmax[i][0] = np.min(minmaxrows[:, i])
-            minmax[i][1] = np.max(minmaxrows[:, i])
+    for i in range(0, d.NUM_INPUTS):
+        minmax[i][0] = np.min(minmaxrows[:, i])
+        minmax[i][1] = np.max(minmaxrows[:, i])
 
-        for site in d.SITES:
-            if site not in workers:
-                continue
+    for site in d.SITES:
+        if site not in workers:
+            continue
 
-            workers[site].cmd("set_minmax", minmax)
+        workers[site].cmd("set_minmax", minmax)
 
-        # Save and shutdown
-        for site in d.SITES:
-            if site not in workers:
-                continue
+    # Save and shutdown
+    for site in d.SITES:
+        if site not in workers:
+            continue
 
-            workers[site].cmd("save_and_shutdown")
-            workers.wait()
+        workers[site].cmd("save_and_shutdown")
+        workers.wait()
 
-        for site in d.SITES:
-            if site not in workers:
-                continue
-            print("Joining: %s" % site)
-            workers[site].join()
+    for site in d.SITES:
+        if site not in workers:
+            continue
+        print("Joining: %s" % site)
+        workers[site].join()
 
 
 if __name__ == '__main__':
