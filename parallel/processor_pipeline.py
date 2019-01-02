@@ -1,8 +1,7 @@
 from collections import deque
 import numpy as np
 import d
-from typing import List
-from sklearn.linear_model import LinearRegression
+from typing import List, Optional
 
 
 class WindowFunction(object):
@@ -28,7 +27,7 @@ class WindowFunction(object):
 
                 window_value = np.mean(nd[sample:sample + self.window_size, i])
 
-                if window_value > self.minmax[i][0]:
+                if window_value < self.minmax[i][0]:
                     self.minmax[i][0] = window_value
                 elif window_value > self.minmax[i][1]:
                     self.minmax[i][1] = window_value
@@ -60,18 +59,23 @@ class SequenceBuilder(object):
         for o in range(0, d.NUM_OUTPUTS):
             self.labels_scaler_map.append(d.INPUT_MAP[d.OUTPUT_COLUMNS[o]])
 
-    def process(self, nd: np.ndarray) -> np.ndarray:
+    def process(self, nd: np.ndarray) -> Optional[np.ndarray]:
 
         if self.leftovers is not None:
             nd = np.concatenate([self.leftovers, nd])
 
-        num_return_sequences = nd.shape[0] + len(self.sequence) - (self.sequence_length - 1) - self.prediction_window
+        num_return_sequences = nd.shape[0] + len(self.sequence) - (
+                self.sequence_length - 1) - self.prediction_window
 
-        sequences = np.zeros((num_return_sequences, nd.shape[1]))
+        if num_return_sequences <= 0:
+            self.leftovers = nd
+            return None
+
+        sequences = np.zeros((num_return_sequences, self.sequence_length, nd.shape[1]))
         sequences_idx = 0
 
         for sample in range(0, nd.shape[0]):
-            self.sequence.append(sample)
+            self.sequence.append(nd[sample])
 
             # Wait to have a complete sequence
             if len(self.sequence) < self.sequence_length:
@@ -81,7 +85,8 @@ class SequenceBuilder(object):
             if sample + 1 + self.prediction_window > nd.shape[0]:
                 break
 
-            sequences[sequences_idx] = np.array(self.sequence)
+            nd_sequence = np.array(self.sequence)
+            sequences[sequences_idx] = nd_sequence
 
             # Labels
             predictions = []
@@ -109,11 +114,11 @@ class SequenceFeatureEnricher(object):
         # So we can map sequence features back to minmax values for scaling
         self.sequence_features_scalar_map = []
         if regression_features:
-            for f in range(2, d.NUM_INPUTS):
+            for f in range(4, d.NUM_INPUTS):
                 self.sequence_features_scalar_map.append(f)
                 self.sequence_features_scalar_map.append(f)
         if std_features:
-            for f in range(2, d.NUM_INPUTS):
+            for f in range(4, d.NUM_INPUTS):
                 self.sequence_features_scalar_map.append(f)
 
     def process(self, nd: np.ndarray):
@@ -124,17 +129,16 @@ class SequenceFeatureEnricher(object):
             features_to_add = []
 
             if self.regression_features:
-                for f in range(2, d.NUM_INPUTS):
-                    x = [[i] for i in range(0, nd.shape[1])]
-                    y = [[i] for i in nd[sequence][:, f].tolist()]
+                for f in range(4, d.NUM_INPUTS):
 
-                    lr = LinearRegression().fit(x, y)
+                    m = np.sum(nd[sequence][:, f]) / np.sum(np.arange(0, nd.shape[1]))
+                    b = nd[sequence][:, f][0]
 
-                    features_to_add.extend([lr.coef_[0][0], lr.intercept_[0]])
+                    features_to_add.extend([m, b])
 
             if self.std_features:
-                for f in range(2, d.NUM_INPUTS):
-                    features_to_add.append(np.std(nd[:, f]))
+                for f in range(4, d.NUM_INPUTS):
+                    features_to_add.append(np.std(nd[sequence][:, f]))
 
             self.sample_sequences.append(nd[sequence])
             self.sequence_features.append(features_to_add)

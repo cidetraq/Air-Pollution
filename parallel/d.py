@@ -1,5 +1,3 @@
-
-
 # Average window_stride elements together to form a single row
 WINDOW_STRIDE = 12
 
@@ -12,7 +10,7 @@ PREDICTION_WINDOW = int(24 / SAMPLE_HOURS)
 SEQUENCE_LENGTH = int(7*24 / SAMPLE_HOURS)
 
 # Input Features
-INPUT_COLUMNS = ['epoch', 'hour', 'temp', 'windspd', 'winddir', 'winddirx', 'winddiry', 'no', 'no2', 'nox', 'o3']
+INPUT_COLUMNS = ['epoch', 'hour', 'Latitude', 'Longitude', 'temp', 'windspd', 'winddir', 'wind_x_dir', 'wind_y_dir', 'no', 'no2', 'nox', 'o3']
 OUTPUT_COLUMNS = ['no', 'no2', 'nox', 'o3']
 
 # Take the FFT of each sqeuence and use as features
