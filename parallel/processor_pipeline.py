@@ -46,18 +46,14 @@ class WindowFunction(object):
 
 
 class SequenceBuilder(object):
-    def __init__(self, sequence_length: int, prediction_window: int, prediction_names: List[str], statistics: bool,
+    def __init__(self, sequence_length: int, prediction_window: int, prediction_names: List[str],
                  masknan: float = None):
 
         self.sequence = deque(maxlen=sequence_length)
         self.sequence_length = sequence_length
         self.prediction_window = prediction_window
         self.prediction_names = prediction_names
-        self.statistics = statistics
         self.masknan = masknan
-
-        if statistics:
-            self.gaps = {}
 
         self.leftovers = None
 
@@ -87,14 +83,6 @@ class SequenceBuilder(object):
 
             # TODO: handle masked rows
             self.sequence.append(nd[sample])
-
-            if self.statistics:
-                if len(self.sequence) >= 2:
-                    key = self.sequence[-1][d.INPUT_MAP['epoch']] - self.sequence[-2][d.INPUT_MAP['epoch']]
-                    if key in self.gaps:
-                        self.gaps[key] += 1
-                    else:
-                        self.gaps[key] = 1
 
             # Wait to have a complete sequence
             if len(self.sequence) < self.sequence_length:

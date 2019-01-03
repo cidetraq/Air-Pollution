@@ -9,12 +9,12 @@ from time import sleep
 
 
 class SiteProcessor(multiprocessing.Process):
-    def __init__(self, site: str, index: int, output_path: str, statistics: bool, masknan: float):
+    def __init__(self, site: str, index: int, output_path: str, masknan: float):
 
         self.window_function = WindowFunction(window_size=d.WINDOW_STRIDE, masknan=masknan)
         self.sequence_builder = SequenceBuilder(sequence_length=d.SEQUENCE_LENGTH,
                                                 prediction_window=d.PREDICTION_WINDOW,
-                                                prediction_names=d.OUTPUT_COLUMNS, statistics=statistics,
+                                                prediction_names=d.OUTPUT_COLUMNS,
                                                 masknan=masknan)
         self.sequence_feature_enricher = SequenceFeatureEnricher(regression_features=d.REGRESSION_FEATURES,
                                                                  std_features=d.STD_FEATURES, masknan=masknan)
@@ -151,8 +151,8 @@ class WorkerManager(object):
 
         return [i for i in self.workers.keys()][self.n - 1]
 
-    def addworker(self, site: str, index: int, output_path: str, statistics: bool, masknan: float = None):
-        self.workers[site] = SiteProcessor(site, index, output_path, statistics, masknan=masknan)
+    def addworker(self, site: str, index: int, output_path: str, masknan: float = None):
+        self.workers[site] = SiteProcessor(site, index, output_path, masknan=masknan)
         self.workers[site].start()
 
     def wait(self):
@@ -228,7 +228,6 @@ def transform_file(year: int, masknan: bool, input_path: str, cache_path: str):
     year_end=("Year to stop with", "option", "e", int),
     num_jobs=("Number of workers simultameously ingesting data. Set to number of cores", "option", "J", int),
     reset_cache=("Do not use existing cache files (rebuild new ones)", "flag"),
-    statistics=("Run various statistics.", "flag"),
     transform_only=("Only run the preprocessing transform", "flag"),
     transform_jobs=("Number of simultameous transform jobs", "option", "T", int),
     site=("Only run a specific site", "option", "S", str),
@@ -242,7 +241,6 @@ def main(ingest_path: str = '/some/default/path/here/input',
          year_begin: int = 2000,
          year_end: int = 2018,
          reset_cache: bool = False,
-         statistics: bool = False,
          transform_only: bool = False,
          transform_jobs: int = 1,
          site: bool = None,
@@ -316,7 +314,7 @@ def main(ingest_path: str = '/some/default/path/here/input',
                 continue
 
             if site not in workers:
-                workers.addworker(site, site_index, output_path, statistics=statistics, masknan=masknan)
+                workers.addworker(site, site_index, output_path, masknan=masknan)
                 site_index += 1
 
             workers[site].givejob(job)
@@ -341,19 +339,6 @@ def main(ingest_path: str = '/some/default/path/here/input',
             continue
 
         workers[site].cmd("set_minmax", minmax)
-
-    if statistics:
-        gaps = {}
-        for site in d.SITES:
-            if site not in workers:
-                continue
-            g = workers[site].cmd("get_gaps")
-            for size in g:
-                if size in gaps:
-                    gaps[size] += g[size]
-                else:
-                    gaps[size] = g[size]
-        print(gaps)
 
     # Save and shutdown
     for site in d.SITES:
