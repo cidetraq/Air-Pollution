@@ -40,7 +40,7 @@ class WindowFunction(object):
             sample += self.window_size
 
         # Save leftovers for next window
-        self.leftovers = nd[-self.window_size:]
+        self.leftovers = nd[sample:]
 
         return windows
 
@@ -69,17 +69,18 @@ class SequenceBuilder(object):
         if self.leftovers is not None:
             nd = np.concatenate([self.leftovers, nd])
 
-        num_return_sequences = nd.shape[0] + len(self.sequence) - (
-                self.sequence_length - 1) - self.prediction_window
+        have_samples = nd.shape[0] + len(self.sequence)
+        seq_pred_length = self.sequence_length + self.prediction_window
+        num_return_sequences = have_samples - (seq_pred_length + 1)
 
         if num_return_sequences <= 0:
             self.leftovers = nd
             return None
 
         sequences = np.zeros((num_return_sequences, self.sequence_length, nd.shape[1]))
-        sequences_idx = 0
 
-        for sample in range(0, nd.shape[0]):
+        sample = 0
+        while sample < num_return_sequences + (self.sequence_length - len(self.sequence)):
 
             # TODO: handle masked rows
             self.sequence.append(nd[sample])
@@ -88,12 +89,8 @@ class SequenceBuilder(object):
             if len(self.sequence) < self.sequence_length:
                 continue
 
-            # Since we are predicting the mean, make sure we do not go out of bounds in the future
-            if sample + 1 + self.prediction_window > nd.shape[0]:
-                break
-
             nd_sequence = np.array(self.sequence)
-            sequences[sequences_idx] = nd_sequence
+            sequences[sample] = nd_sequence
 
             # Labels
             predictions = []
@@ -103,9 +100,9 @@ class SequenceBuilder(object):
 
             self.labels.append(predictions)
 
-            sequences_idx += 1
+            sample += 1
 
-        self.leftovers = nd[-self.prediction_window:]
+        self.leftovers = nd[sample:]
 
         return sequences
 
