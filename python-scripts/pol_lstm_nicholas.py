@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 #%matplotlib inline
@@ -14,23 +14,23 @@ from sklearn.preprocessing import MinMaxScaler
 import os
 import pickle
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
-from keras.models import Model
+from keras.models import Model, load_model
 from keras import backend as K
 from keras.layers import Dense, LSTM, Input, Flatten
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint, TensorBoard
 
 
-# In[2]:
+# In[ ]:
 
 
 profiles={'cluster': {'in_path': '/project/lindner/moving/summer2018/2019/data-intermediate/', 'out_path': '/project/lindner/moving/summer2019/2019/models/'},
-         'nicholas': {'in_path': 'D:/programming-no-gdrive/air-pollution/data-intermediate/', 'out_path': 'D:/programming-no-gdrive/DASH/Air Pollution/models'}}
+         'nicholas': {'in_path': 'D:/programming-no-gdrive/air-pollution/data-intermediate/', 'out_path': 'D:/programming-no-gdrive/DASH/Air Pollution/models/'}}
 
 
-# In[7]:
+# In[ ]:
 
 
-def main(user, window_stride, nd_window):
+def main(user, window_stride, nd_window,load, epochs=10):
     #Notebook
     os.chdir('../python-scripts')
     from format_data_labels import create_data_labels
@@ -55,12 +55,14 @@ def main(user, window_stride, nd_window):
     data, labels=create_data_labels(window_stride, nd_window)
     print('Created data and labels')
     # Number of features we take from the data
-    input_features = data.shape[1]
+    print('Data shape: '+str(data.shape))
+    input_features = data.shape[2]
+    print('Sequence length: '+str(sequence_length))
+    print('Number of input features: '+str(input_features))
     num_features = input_features
     num_inputs = input_features
     model_params=[sequence_length, input_features]
-    model=create_model(data, labels, out_path, model_params, num_outputs)
-    model.save(out_path+'lstm_w'+str(window_stride)+'_f'+str(input_features)+'_o'+str(num_outputs)+'.h5')
+    model=create_model(data, labels, out_path, model_params, num_outputs, load, epochs, window_stride)
 
 
 # #Theano
@@ -90,10 +92,10 @@ def main(user, window_stride, nd_window):
 #     def get_output_shape_for(self, input_shape):
 #         return (input_shape[0], input_shape[-1])
 
-# In[4]:
+# In[ ]:
 
 
-def model_architecture(sequence_length, input_features, num_outputs, r2):
+def model_architecture(sequence_length, input_features, num_outputs, r2, window_stride):
 # For some reason putting some extra dimensions before an LSTM works wonders
     layer_input = Input(shape=(sequence_length, input_features), name='inputs')
     dense_1 = Dense(128, input_dim=(sequence_length, input_features))(layer_input)
@@ -103,16 +105,15 @@ def model_architecture(sequence_length, input_features, num_outputs, r2):
     layer_output = Dense(num_outputs, activation='linear', name='outputs')(layer_flatten)
 
     model = Model(inputs=[layer_input], outputs=[layer_output])
-
     model.compile(optimizer='adam', loss='mean_squared_error', metrics=[r2])
     print(model.summary())
     return model
 
 
-# In[5]:
+# In[ ]:
 
 
-def create_model(data, labels, out_path, model_params,num_outputs):
+def create_model(data, labels, out_path, model_params,num_outputs,load,window_stride,epochs=10):
     def r2(y_true, y_pred):
         SS_res =  K.sum(K.square(y_true - y_pred)) 
         SS_tot = K.sum(K.square(y_true - K.mean(y_true))) 
@@ -127,12 +128,16 @@ def create_model(data, labels, out_path, model_params,num_outputs):
 
     lr_decay = LearningRateScheduler(schedule=sched) 
 
-    filepath="weights.best.hdf5"
+    filepath='lstm_w'+str(window_stride)+'_f'+str(input_features)+'_o'+str(num_outputs)+'.h5'
+
     checkpoint = ModelCheckpoint(out_path+filepath, monitor='val_r2', verbose=1, save_best_only=True, mode='max')
 
     tensorboard = TensorBoard(log_dir='./tb', histogram_freq=0, batch_size=128, write_graph=True, write_grads=False)
-    model=model_architecture(sequence_length, input_features, num_outputs, r2)
-    model.fit(x=data, y=labels, batch_size=128, epochs=1, validation_split=0.2, verbose=True, callbacks=[lr_decay, checkpoint, tensorboard])
+    if load==None:
+        model=model_architecture(sequence_length, input_features, num_outputs, r2)
+    else: 
+        model=load_model(out_path+load, custom_objects={'r2': r2})
+    model.fit(x=data, y=labels, batch_size=128, epochs=epochs, validation_split=0.2, verbose=True, callbacks=[lr_decay, checkpoint, tensorboard])
     return model
 
 
@@ -148,14 +153,16 @@ if __name__=='__main__':
     #                    help="increase output verbosity")
     parser.add_argument('-w', '--window_stride', type=int, help='window stride')
     parser.add_argument('-f', '--filename', type=str, help='filename of nd_window')
+    parser.add_argument('-l', '--load_model', type=str, help='filename of model to load. if blank, will create new model.')
+    parser.add_argument('-e', '--epochs', type=int, help='number of epochs to train')
     args = parser.parse_args()
-    main(args.user, args.window_stride, args.filename)
+    main(args.user, args.window_stride, args.filename, args.load_model, args.epochs)
 
 
-# In[8]:
+# In[ ]:
 
 
-main('nicholas', 12, 'windowed_2000.pkl')
+#main('nicholas', 12, 'windowed_2000.pkl')
 
 
 # 
