@@ -9,12 +9,12 @@ from time import sleep
 
 
 class SiteProcessor(multiprocessing.Process):
-    def __init__(self, site: str, index: int, output_path: str):
+    def __init__(self, site: str, index: int, output_path: str, statistics: bool):
 
         self.window_function = WindowFunction(window_size=d.WINDOW_STRIDE)
         self.sequence_builder = SequenceBuilder(sequence_length=d.SEQUENCE_LENGTH,
                                                 prediction_window=d.PREDICTION_WINDOW,
-                                                prediction_names=d.OUTPUT_COLUMNS)
+                                                prediction_names=d.OUTPUT_COLUMNS, statistics=statistics)
         self.sequence_feature_enricher = SequenceFeatureEnricher(regression_features=d.REGRESSION_FEATURES,
                                                                  std_features=d.STD_FEATURES)
 
@@ -41,6 +41,8 @@ class SiteProcessor(multiprocessing.Process):
                 self._process_data(data)
             if cmd == "get_minmax":
                 self.response_queue.put(self.window_function.minmax)
+            if cmd == "get_gaps":
+                self.response_queue.put(self.sequence_builder.gaps)
             elif cmd == "set_minmax":
                 self.window_function.minmax = data
                 self.response_queue.put(None)
@@ -147,8 +149,8 @@ class WorkerManager(object):
 
         return [i for i in self.workers.keys()][self.n - 1]
 
-    def addworker(self, site: str, index: int, output_path: str):
-        self.workers[site] = SiteProcessor(site, index, output_path)
+    def addworker(self, site: str, index: int, output_path: str, statistics: bool):
+        self.workers[site] = SiteProcessor(site, index, output_path, statistics)
         self.workers[site].start()
 
     def wait(self):
@@ -165,40 +167,71 @@ class WorkerManager(object):
             sleep(0.1)
 
 
-def transform(df: pd.DataFrame, year: int) -> pd.DataFrame:
+def transform(df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFrame:
+
+    if masknan is None:
+
+        if year < 2014:
+            df = df[df['nox_flag'] == 'VAL']
+            df = df[df['no_flag'] == 'VAL']
+            df = df[df['no2_flag'] == 'VAL']
+            df = df[df['o3_flag'] == "VAL"]
+            df = df[df['temp_flag'] == "VAL"]
+        if year >= 2014:
+            df = df[df['nox_flag'] == 'K']
+            df = df[df['no_flag'] == 'K']
+            df = df[df['o3_flag'] == 'K']
+            df = df[df['temp_flag'] == 'K']
+
+        df = df[~df['winddir'].isna()]
+        df = df[~df['AQS_Code'].isna()]
+
+        df = df.drop(
+            ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
+             'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
+             'temp_flag', 'Longitude', 'Latitude'], axis=1)
+
+        df = df.dropna()
+
     df['wind_x_dir'] = df['windspd'] * np.cos(df['winddir'] * (np.pi / 180))
     df['wind_y_dir'] = df['windspd'] * np.sin(df['winddir'] * (np.pi / 180))
     df['hour'] = pd.to_datetime(df['epoch'], unit='s').dt.hour
+    df['day_of_year'] = pd.Series(pd.to_datetime(df['epoch'], unit='s'))
+    df['day_of_year'] = df['day_of_year'].dt.dayofyear
 
-    if year < 2014:
-        df = df[df['nox_flag'] == 'VAL']
-        df = df[df['no_flag'] == 'VAL']
-        df = df[df['o3_flag'] == "VAL"]
-        df = df[df['temp_flag'] == "VAL"]
-    if year >= 2014:
-        df = df[df['nox_flag'] == 'VAL']
-        df = df[df['no_flag'] == 'VAL']
-        df = df[df['o3_flag'] == "K"]
-        df = df[df['temp_flag'] == "K"]
-    df = df[~df['winddir'].isna()]
-    df = df[~df['AQS_Code'].isna()]
+    if masknan is not None:
+        df = df.drop(
+            ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
+             'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
+             'temp_flag', 'Longitude', 'Latitude'], axis=1)
 
-    df = df.drop(
-        ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
-         'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
-         'temp_flag'], axis=1)
+        df[df.isna()] = masknan
+
     return df
+
+
+def transform_file(year: int, masknan: bool, input_path: str, cache_path: str):
+    df = pd.read_csv(input_path)
+    df = transform(df, year, masknan)
+    df.to_csv(cache_path)
+
+    return True
 
 
 @plac.annotations(
     ingest_path=("Path containing the data files to ingest", "option", "P", str),
     ingest_prefix=("{$prefix}year.csv", "option", "p", str),
     ingest_suffix=("year{$suffix}.csv", "option", "s", str),
-    output_path=("Path to write the resulting numpy sequences", "option", "o", str),
+    output_path=("Path to write the resulting numpy sequences / transform cache", "option", "o", str),
     year_begin=("First year to process", "option", "b", int),
     year_end=("Year to stop with", "option", "e", int),
     num_jobs=("Number of workers simultameously ingesting data. Set to number of cores", "option", "J", int),
-    reset_cache=("Do not use existing cache files (rebuild new ones)", "flag")
+    reset_cache=("Do not use existing cache files (rebuild new ones)", "flag"),
+    statistics=("Run various statistics.", "flag"),
+    transform_only=("Only run the preprocessing transform", "flag"),
+    transform_jobs=("Number of simultameous transform jobs", "option", "T", int),
+    site=("Only run a specific site", "option", "S", str),
+    masknan=("Mask nan rows instead of dropping them", "option", "M", float)
 )
 def main(ingest_path: str = '/some/default/path/here/input',
          ingest_prefix: str = "",
@@ -207,10 +240,55 @@ def main(ingest_path: str = '/some/default/path/here/input',
          num_jobs: int = 1,
          year_begin: int = 2000,
          year_end: int = 2018,
-         reset_cache: bool = False):
+         reset_cache: bool = False,
+         statistics: bool = False,
+         transform_only: bool = False,
+         transform_jobs: int = 1,
+         site: bool = None,
+         masknan: float = None):
     workers = WorkerManager(num_jobs=num_jobs)
 
     site_index = 0
+
+    jobs = []
+
+    for year_idx, year in enumerate(range(year_begin, year_end)):
+
+        input_name = "%s%d%s.csv" % (ingest_prefix, year, ingest_suffix)
+        cache_name = input_name + '.cache'
+
+        print("Transform: %s" % input_name)
+        if not reset_cache:
+            if not os.path.exists(os.path.join(ingest_path, cache_name)):
+                jobs.append([year, masknan, os.path.join(ingest_path, input_name), os.path.join(output_path, cache_name)])
+        else:
+            jobs.append([year, masknan, os.path.join(ingest_path, input_name), os.path.join(output_path, cache_name)])
+
+    if len(jobs) > 0:
+        print("Starting Transform (files=%d, jobs=%d)" % (len(jobs), transform_jobs))
+
+    jobs_complete = 0
+
+    def async_cb(args):
+        nonlocal jobs_complete
+        jobs_complete += 1
+        print("Transform Progress: %d/%d" % (jobs_complete, len(jobs)))
+
+    transform_pool = multiprocessing.Pool(transform_jobs)
+
+    job_results = []
+    for job in jobs:
+        result = transform_pool.apply_async(transform_file, job, callback=async_cb)
+        job_results.append(result)
+
+    for res in job_results:
+        res.get()
+
+    transform_pool.close()
+    transform_pool.join()
+
+    if transform_only:
+        return
 
     for year_idx, year in enumerate(range(year_begin, year_end)):
 
@@ -219,20 +297,15 @@ def main(ingest_path: str = '/some/default/path/here/input',
 
         print("Processing: %s" % input_name)
 
-        if not reset_cache:
-            try:
-                df = pd.read_csv(os.path.join(ingest_path, cache_name))
-                print("Loaded %s from cache" % input_name)
-            except FileNotFoundError:
-                df = pd.read_csv(os.path.join(ingest_path, input_name))
-                df = transform(df, year)
-                df.to_csv(os.path.join(ingest_path, cache_name))
-        else:
-            df = pd.read_csv(os.path.join(ingest_path, input_name))
-            df = transform(df, year)
-            df.to_csv(os.path.join(ingest_path, cache_name))
+        df = pd.read_csv(os.path.join(output_path, cache_name))
+        print("Loaded %s" % input_name)
 
-        for site in df['AQS_Code'].unique():
+        if site is None:
+            sites = df['AQS_Code'].unique()
+        else:
+            sites = [site]
+
+        for site in sites:
 
             print("Processing(%s): %s" % (year, site))
 
@@ -242,7 +315,7 @@ def main(ingest_path: str = '/some/default/path/here/input',
                 continue
 
             if site not in workers:
-                workers.addworker(site, site_index, output_path)
+                workers.addworker(site, site_index, output_path, statistics)
                 site_index += 1
 
             workers[site].givejob(job)
@@ -267,6 +340,19 @@ def main(ingest_path: str = '/some/default/path/here/input',
             continue
 
         workers[site].cmd("set_minmax", minmax)
+
+    if statistics:
+        gaps = {}
+        for site in d.SITES:
+            if site not in workers:
+                continue
+            g = workers[site].cmd("get_gaps")
+            for size in g:
+                if size in gaps:
+                    gaps[size] += g[size]
+                else:
+                    gaps[size] = g[size]
+        print(gaps)
 
     # Save and shutdown
     for site in d.SITES:

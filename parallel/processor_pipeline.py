@@ -43,12 +43,16 @@ class WindowFunction(object):
 
 
 class SequenceBuilder(object):
-    def __init__(self, sequence_length: int, prediction_window: int, prediction_names: List[str]):
+    def __init__(self, sequence_length: int, prediction_window: int, prediction_names: List[str], statistics: bool):
 
         self.sequence = deque(maxlen=sequence_length)
         self.sequence_length = sequence_length
         self.prediction_window = prediction_window
         self.prediction_names = prediction_names
+        self.statistics = statistics
+
+        if statistics:
+            self.gaps = {}
 
         self.leftovers = None
 
@@ -76,6 +80,14 @@ class SequenceBuilder(object):
 
         for sample in range(0, nd.shape[0]):
             self.sequence.append(nd[sample])
+
+            if self.statistics:
+                if len(self.sequence) >= 2:
+                    key = self.sequence[-1][d.INPUT_MAP['epoch']] - self.sequence[-2][d.INPUT_MAP['epoch']]
+                    if key in self.gaps:
+                        self.gaps[key] += 1
+                    else:
+                        self.gaps[key] = 1
 
             # Wait to have a complete sequence
             if len(self.sequence) < self.sequence_length:
@@ -114,11 +126,11 @@ class SequenceFeatureEnricher(object):
         # So we can map sequence features back to minmax values for scaling
         self.sequence_features_scalar_map = []
         if regression_features:
-            for f in range(4, d.NUM_INPUTS):
+            for f in range(d.ENRICH_START, d.NUM_INPUTS):
                 self.sequence_features_scalar_map.append(f)
                 self.sequence_features_scalar_map.append(f)
         if std_features:
-            for f in range(4, d.NUM_INPUTS):
+            for f in range(d.ENRICH_START, d.NUM_INPUTS):
                 self.sequence_features_scalar_map.append(f)
 
     def process(self, nd: np.ndarray):
@@ -129,7 +141,7 @@ class SequenceFeatureEnricher(object):
             features_to_add = []
 
             if self.regression_features:
-                for f in range(4, d.NUM_INPUTS):
+                for f in range(d.ENRICH_START, d.NUM_INPUTS):
 
                     m = np.sum(nd[sequence][:, f]) / np.sum(np.arange(0, nd.shape[1]))
                     b = nd[sequence][:, f][0]
@@ -137,7 +149,7 @@ class SequenceFeatureEnricher(object):
                     features_to_add.extend([m, b])
 
             if self.std_features:
-                for f in range(4, d.NUM_INPUTS):
+                for f in range(d.ENRICH_START, d.NUM_INPUTS):
                     features_to_add.append(np.std(nd[sequence][:, f]))
 
             self.sample_sequences.append(nd[sequence])
