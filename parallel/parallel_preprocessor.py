@@ -213,13 +213,14 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFram
     ingest_path=("Path containing the data files to ingest", "option", "P", str),
     ingest_prefix=("{$prefix}year.csv", "option", "p", str),
     ingest_suffix=("year{$suffix}.csv", "option", "s", str),
-    output_path=("Path to write the resulting numpy sequences", "option", "o", str),
+    output_path=("Path to write the resulting numpy sequences / transform cache", "option", "o", str),
     year_begin=("First year to process", "option", "b", int),
     year_end=("Year to stop with", "option", "e", int),
     num_jobs=("Number of workers simultameously ingesting data. Set to number of cores", "option", "J", int),
     reset_cache=("Do not use existing cache files (rebuild new ones)", "flag"),
     statistics=("Run various statistics.", "flag"),
     transform_only=("Only run the preprocessing transform", "flag"),
+    transform_jobs=("Number of simultameous transform jobs", "option", "T", int),
     site=("Only run a specific site", "option", "S", str),
     masknan=("Mask nan rows instead of dropping them", "option", "M", float)
 )
@@ -233,11 +234,59 @@ def main(ingest_path: str = '/some/default/path/here/input',
          reset_cache: bool = False,
          statistics: bool = False,
          transform_only: bool = False,
+         transform_jobs: int = 1,
          site: bool = None,
          masknan: float = None):
     workers = WorkerManager(num_jobs=num_jobs)
 
     site_index = 0
+
+    jobs = []
+
+    for year_idx, year in enumerate(range(year_begin, year_end)):
+
+        input_name = "%s%d%s.csv" % (ingest_prefix, year, ingest_suffix)
+        cache_name = input_name + '.cache'
+
+        print("Transform: %s" % input_name)
+        if not reset_cache:
+            if not os.path.exists(os.path.join(ingest_path, cache_name)):
+                jobs.append([year, masknan, os.path.join(ingest_path, input_name), os.path.join(output_path, cache_name)])
+        else:
+            jobs.append([year, masknan, os.path.join(ingest_path, input_name), os.path.join(output_path, cache_name)])
+
+    if len(jobs) > 0:
+        print("Executing transform (files=%d, jobs=%d)" % (len(jobs), transform_jobs))
+
+    jobs_complete = 0
+
+    def async_cb(args):
+        nonlocal jobs_complete
+        jobs_complete += 1
+        print("Progress: %d/%d" % (jobs_complete, len(jobs)))
+
+    def transform_file(args):
+
+        year = args[0]
+        masknan = args[1]
+        input_path = args[2]
+        cache_path = args[3]
+
+        df = pd.read_csv(input_path)
+        df = transform(df, year, masknan)
+        df.to_csv(cache_path)
+
+        return True
+
+    transform_pool = multiprocessing.Pool(transform_jobs)
+    result = transform_pool.map_async(transform_file, jobs, callback=async_cb)
+    result.get()
+
+    transform_pool.close()
+    transform_pool.join()
+
+    if transform_only:
+        return
 
     for year_idx, year in enumerate(range(year_begin, year_end)):
 
@@ -246,24 +295,8 @@ def main(ingest_path: str = '/some/default/path/here/input',
 
         print("Processing: %s" % input_name)
 
-        if not transform_only:
-            if not reset_cache:
-                try:
-                    df = pd.read_csv(os.path.join(ingest_path, cache_name))
-                    print("Loaded %s from cache" % input_name)
-                except FileNotFoundError:
-                    df = pd.read_csv(os.path.join(ingest_path, input_name))
-                    df = transform(df, year, masknan)
-                    df.to_csv(os.path.join(ingest_path, cache_name))
-            else:
-                df = pd.read_csv(os.path.join(ingest_path, input_name))
-                df = transform(df, year, masknan)
-                df.to_csv(os.path.join(ingest_path, cache_name))
-        else:
-            df = pd.read_csv(os.path.join(ingest_path, input_name))
-            df = transform(df, year, masknan)
-            df.to_csv(os.path.join(ingest_path, cache_name))
-            continue
+        df = pd.read_csv(os.path.join(ingest_path, cache_name))
+        print("Loaded %s" % input_name)
 
         if site is None:
             sites = df['AQS_Code'].unique()
@@ -285,9 +318,6 @@ def main(ingest_path: str = '/some/default/path/here/input',
 
             workers[site].givejob(job)
             workers.wait()
-
-    if transform_only:
-        return
 
     # Coordinate min/max between all workers
     minmaxrows = []
