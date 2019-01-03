@@ -199,7 +199,7 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFram
     df['day_of_year'] = df['day_of_year'].dt.dayofyear
 
     if masknan is not None:
-        df[df.isna()] = 0.0
+        df[df.isna()] = masknan
 
     df = df.drop(
         ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
