@@ -198,13 +198,13 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFram
     df['day_of_year'] = pd.Series(pd.to_datetime(df['epoch'], unit='s'))
     df['day_of_year'] = df['day_of_year'].dt.dayofyear
 
-    if masknan is not None:
-        df[df.isna()] = masknan
-
     df = df.drop(
         ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
          'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
          'temp_flag', 'Longitude', 'Latitude'], axis=1)
+
+    if masknan is not None:
+        df[df.isna()] = masknan
 
     return df
 
