@@ -265,14 +265,14 @@ def main(ingest_path: str = '/some/default/path/here/input',
             jobs.append([year, masknan, os.path.join(ingest_path, input_name), os.path.join(output_path, cache_name)])
 
     if len(jobs) > 0:
-        print("Executing transform (files=%d, jobs=%d)" % (len(jobs), transform_jobs))
+        print("Starting Transform (files=%d, jobs=%d)" % (len(jobs), transform_jobs))
 
     jobs_complete = 0
 
     def async_cb(args):
         nonlocal jobs_complete
         jobs_complete += 1
-        print("Progress: %d/%d" % (jobs_complete, len(jobs)))
+        print("Transform Progress: %d/%d" % (jobs_complete, len(jobs)))
 
     transform_pool = multiprocessing.Pool(transform_jobs)
 
