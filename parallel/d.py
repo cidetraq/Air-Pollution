@@ -10,7 +10,7 @@ PREDICTION_WINDOW = int(24 / SAMPLE_HOURS)
 SEQUENCE_LENGTH = int(7*24 / SAMPLE_HOURS)
 
 # Input Features
-INPUT_COLUMNS = ['epoch', 'hour', 'Latitude', 'Longitude', 'temp', 'windspd', 'winddir', 'wind_x_dir', 'wind_y_dir', 'no', 'no2', 'nox', 'o3']
+INPUT_COLUMNS = ['epoch', 'day_of_year', 'hour', 'temp', 'windspd', 'winddir', 'wind_x_dir', 'wind_y_dir', 'no', 'no2', 'nox', 'o3']
 OUTPUT_COLUMNS = ['no', 'no2', 'nox', 'o3']
 
 # Take the FFT of each sqeuence and use as features
@@ -24,6 +24,8 @@ STD_FEATURES = True
 
 INPUT_MAP = {value: idx for idx, value in enumerate(INPUT_COLUMNS)}
 OUTPUT_MAP = {value: idx for idx, value in enumerate(OUTPUT_COLUMNS)}
+
+ENRICH_START = INPUT_MAP['temp']
 
 NUM_INPUTS = len(INPUT_COLUMNS)
 NUM_OUTPUTS = len(OUTPUT_COLUMNS)
