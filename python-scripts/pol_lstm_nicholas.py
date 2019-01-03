@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 # coding: utf-8
 
 # In[ ]:
@@ -23,7 +23,7 @@ from keras.callbacks import LearningRateScheduler, ModelCheckpoint, TensorBoard
 # In[ ]:
 
 
-profiles={'cluster': {'in_path': '/project/lindner/moving/summer2018/2019/data-intermediate/', 'out_path': '/project/lindner/moving/summer2019/2019/models/'},
+profiles={'cluster': {'in_path': '/project/lindner/moving/summer2018/2019/data-intermediate/', 'out_path': '/project/lindner/moving/summer2018/2019/models/'},
          'nicholas': {'in_path': 'D:/programming-no-gdrive/air-pollution/data-intermediate/', 'out_path': 'D:/programming-no-gdrive/DASH/Air Pollution/models/'}}
 
 
@@ -134,7 +134,7 @@ def create_model(data, labels, out_path, model_params,num_outputs,load,window_st
 
     tensorboard = TensorBoard(log_dir='./tb', histogram_freq=0, batch_size=128, write_graph=True, write_grads=False)
     if load==None:
-        model=model_architecture(sequence_length, input_features, num_outputs, r2)
+        model=model_architecture(sequence_length, input_features, num_outputs, r2, window_stride)
     else: 
         model=load_model(out_path+load, custom_objects={'r2': r2})
     model.fit(x=data, y=labels, batch_size=128, epochs=epochs, validation_split=0.2, verbose=True, callbacks=[lr_decay, checkpoint, tensorboard])
@@ -241,9 +241,3 @@ if __name__=='__main__':
 #     plt.close()
 # 
 #     print("Rendered %d" % seq)
-
-# In[ ]:
-
-
-
-

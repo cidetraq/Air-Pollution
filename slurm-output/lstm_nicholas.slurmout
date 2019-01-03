@@ -1,0 +1,10 @@
+Using TensorFlow backend.
+Sample Hours: 1.000000
+Prediction Window: 24
+Sequence Length: 168
+Traceback (most recent call last):
+  File "../python-scripts/pol_lstm_nicholas.py", line 159, in <module>
+    main(args.user, args.window_stride, args.filename, args.load_model, args.epochs)
+  File "../python-scripts/pol_lstm_nicholas.py", line 54, in main
+    nd_window=pickle.load(open(in_path+nd_window, 'rb'))
+TypeError: must be str, not NoneType
