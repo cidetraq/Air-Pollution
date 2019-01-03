@@ -296,7 +296,7 @@ def main(ingest_path: str = '/some/default/path/here/input',
 
         print("Processing: %s" % input_name)
 
-        df = pd.read_csv(os.path.join(ingest_path, cache_name))
+        df = pd.read_csv(os.path.join(output_path, cache_name))
         print("Loaded %s" % input_name)
 
         if site is None:
