@@ -221,7 +221,7 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFram
     statistics=("Run various statistics.", "flag"),
     transform_only=("Only run the preprocessing transform", "flag"),
     site=("Only run a specific site", "option", "S", str),
-    masknan=("Mask nan rows instead of dropping them", "flag", float)
+    masknan=("Mask nan rows instead of dropping them", "option", "M", float)
 )
 def main(ingest_path: str = '/some/default/path/here/input',
          ingest_prefix: str = "",
