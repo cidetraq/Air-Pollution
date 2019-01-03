@@ -209,6 +209,14 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFram
     return df
 
 
+def transform_file(year: int, masknan: bool, input_path: str, cache_path: str):
+    df = pd.read_csv(input_path)
+    df = transform(df, year, masknan)
+    df.to_csv(cache_path)
+
+    return True
+
+
 @plac.annotations(
     ingest_path=("Path containing the data files to ingest", "option", "P", str),
     ingest_prefix=("{$prefix}year.csv", "option", "p", str),
@@ -265,22 +273,15 @@ def main(ingest_path: str = '/some/default/path/here/input',
         jobs_complete += 1
         print("Progress: %d/%d" % (jobs_complete, len(jobs)))
 
-    def transform_file(args):
-
-        year = args[0]
-        masknan = args[1]
-        input_path = args[2]
-        cache_path = args[3]
-
-        df = pd.read_csv(input_path)
-        df = transform(df, year, masknan)
-        df.to_csv(cache_path)
-
-        return True
-
     transform_pool = multiprocessing.Pool(transform_jobs)
-    result = transform_pool.map_async(transform_file, jobs, callback=async_cb)
-    result.get()
+
+    job_results = []
+    for job in jobs:
+        result = transform_pool.apply_async(transform_file, job, callback=async_cb)
+        job_results.append(result)
+
+    for res in job_results:
+        res.get()
 
     transform_pool.close()
     transform_pool.join()
