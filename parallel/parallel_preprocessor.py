@@ -103,8 +103,8 @@ class SiteProcessor(multiprocessing.Process):
             sequence_features[:, f] /= np.abs(minmax[s][0] - minmax[s][1])
 
         def _save(nd: np.ndarray, name: str):
-            out_name = '%0.3d_%s.nd' % (self.index, name)
-            out_desc_name = '%0.3d_%s.nd.desc' % (self.index, name)
+            out_name = '%0.3d_%s' % (self.index, name)
+            out_desc_name = '%0.3d_%s.desc' % (self.index, name)
 
             np.save(os.path.join(self.output_path, out_name), nd)
 
