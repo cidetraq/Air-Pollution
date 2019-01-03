@@ -6,7 +6,8 @@ from typing import List, Optional
 
 class WindowFunction(object):
 
-    def __init__(self, window_size: int):
+    def __init__(self, window_size: int, masknan: float = None):
+        self.masknan = masknan
         self.window_size = window_size
         self.leftovers = None
 
@@ -23,6 +24,8 @@ class WindowFunction(object):
 
         sample = 0
         while sample < nd.shape[0] - self.window_size:
+            # TODO: handle masked rows
+
             for i in range(0, d.NUM_INPUTS):
 
                 window_value = np.mean(nd[sample:sample + self.window_size, i])
@@ -43,13 +46,15 @@ class WindowFunction(object):
 
 
 class SequenceBuilder(object):
-    def __init__(self, sequence_length: int, prediction_window: int, prediction_names: List[str], statistics: bool):
+    def __init__(self, sequence_length: int, prediction_window: int, prediction_names: List[str], statistics: bool,
+                 masknan: float = None):
 
         self.sequence = deque(maxlen=sequence_length)
         self.sequence_length = sequence_length
         self.prediction_window = prediction_window
         self.prediction_names = prediction_names
         self.statistics = statistics
+        self.masknan = masknan
 
         if statistics:
             self.gaps = {}
@@ -79,6 +84,8 @@ class SequenceBuilder(object):
         sequences_idx = 0
 
         for sample in range(0, nd.shape[0]):
+
+            # TODO: handle masked rows
             self.sequence.append(nd[sample])
 
             if self.statistics:
@@ -116,9 +123,11 @@ class SequenceBuilder(object):
 
 
 class SequenceFeatureEnricher(object):
-    def __init__(self, regression_features=True, std_features=True):
+    def __init__(self, regression_features=True, std_features=True, masknan: float = None):
         self.regression_features = regression_features
         self.std_features = std_features
+
+        self.masknan = masknan
 
         self.sample_sequences = []
         self.sequence_features = []
@@ -138,11 +147,12 @@ class SequenceFeatureEnricher(object):
         # Add some features
         for sequence in range(0, nd.shape[0]):
 
+            # TODO: handle masked rows
+
             features_to_add = []
 
             if self.regression_features:
                 for f in range(d.ENRICH_START, d.NUM_INPUTS):
-
                     m = np.sum(nd[sequence][:, f]) / np.sum(np.arange(0, nd.shape[1]))
                     b = nd[sequence][:, f][0]
 
@@ -154,4 +164,3 @@ class SequenceFeatureEnricher(object):
 
             self.sample_sequences.append(nd[sequence])
             self.sequence_features.append(features_to_add)
-

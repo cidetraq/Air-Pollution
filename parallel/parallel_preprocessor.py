@@ -9,14 +9,15 @@ from time import sleep
 
 
 class SiteProcessor(multiprocessing.Process):
-    def __init__(self, site: str, index: int, output_path: str, statistics: bool):
+    def __init__(self, site: str, index: int, output_path: str, statistics: bool, masknan: float):
 
-        self.window_function = WindowFunction(window_size=d.WINDOW_STRIDE)
+        self.window_function = WindowFunction(window_size=d.WINDOW_STRIDE, masknan=masknan)
         self.sequence_builder = SequenceBuilder(sequence_length=d.SEQUENCE_LENGTH,
                                                 prediction_window=d.PREDICTION_WINDOW,
-                                                prediction_names=d.OUTPUT_COLUMNS, statistics=statistics)
+                                                prediction_names=d.OUTPUT_COLUMNS, statistics=statistics,
+                                                masknan=masknan)
         self.sequence_feature_enricher = SequenceFeatureEnricher(regression_features=d.REGRESSION_FEATURES,
-                                                                 std_features=d.STD_FEATURES)
+                                                                 std_features=d.STD_FEATURES, masknan=masknan)
 
         self.idle_event = multiprocessing.Event()
 
@@ -69,6 +70,7 @@ class SiteProcessor(multiprocessing.Process):
         # Convert to numpy arrays and scale the values
         sample_sequences = np.array(self.sequence_feature_enricher.sample_sequences)
 
+        # TODO: don't scale rows which are all masked
         for i in range(0, d.NUM_INPUTS):
 
             # Bias to start at zero
@@ -149,8 +151,8 @@ class WorkerManager(object):
 
         return [i for i in self.workers.keys()][self.n - 1]
 
-    def addworker(self, site: str, index: int, output_path: str, statistics: bool):
-        self.workers[site] = SiteProcessor(site, index, output_path, statistics)
+    def addworker(self, site: str, index: int, output_path: str, statistics: bool, masknan: float = None):
+        self.workers[site] = SiteProcessor(site, index, output_path, statistics, masknan=masknan)
         self.workers[site].start()
 
     def wait(self):
@@ -168,7 +170,6 @@ class WorkerManager(object):
 
 
 def transform(df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFrame:
-
     if masknan is None:
 
         if year < 2014:
@@ -257,10 +258,11 @@ def main(ingest_path: str = '/some/default/path/here/input',
         input_name = "%s%d%s.csv" % (ingest_prefix, year, ingest_suffix)
         cache_name = input_name + '.cache'
 
-        print("Transform: %s" % input_name)
         if not reset_cache:
-            if not os.path.exists(os.path.join(ingest_path, cache_name)):
-                jobs.append([year, masknan, os.path.join(ingest_path, input_name), os.path.join(output_path, cache_name)])
+            if not os.path.exists(os.path.join(output_path, cache_name)):
+                print("Transform: %s" % input_name)
+                jobs.append(
+                    [year, masknan, os.path.join(ingest_path, input_name), os.path.join(output_path, cache_name)])
         else:
             jobs.append([year, masknan, os.path.join(ingest_path, input_name), os.path.join(output_path, cache_name)])
 
@@ -298,7 +300,6 @@ def main(ingest_path: str = '/some/default/path/here/input',
         print("Processing: %s" % input_name)
 
         df = pd.read_csv(os.path.join(output_path, cache_name))
-        print("Loaded %s" % input_name)
 
         if site is None:
             sites = df['AQS_Code'].unique()
@@ -315,7 +316,7 @@ def main(ingest_path: str = '/some/default/path/here/input',
                 continue
 
             if site not in workers:
-                workers.addworker(site, site_index, output_path, statistics)
+                workers.addworker(site, site_index, output_path, statistics=statistics, masknan=masknan)
                 site_index += 1
 
             workers[site].givejob(job)
