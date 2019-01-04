@@ -47,6 +47,12 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFram
     return df
 
 
+def run_job(job: dict):
+    df = pd.read_csv(job['input_path'])
+    df = transform(df, job['year'], job['masknan'])
+    df.to_csv(job['output_path'])
+
+
 @plac.annotations(
     input_path=("Path containing the data files to ingest", "option", "P", str),
     input_prefix=("{$prefix}year.csv", "option", "p", str),
@@ -66,35 +72,56 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
 
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
-    nprocs = comm.Get_size()
+    n_procs = comm.Get_size()
 
     if rank == 0:
 
-        nproc = 1
+        n_proc = 0
         n_jobs = 0
+
+        my_jobs = []
         for year_idx, year in enumerate(range(year_begin, year_end)):
 
             input_name = "%s%d%s.csv" % (input_prefix, year, input_suffix)
             transform_name = 'Transformed_' + input_name
 
-            job = {'cmd': 'transform', 'year': year, 'masknan': masknan, 'input_path': os.path.join(input_path, input_name), 'output_path': os.path.join(output_path, transform_name)}
-            comm.isend(job, dest=nproc, tag=1)
-            n_jobs += 1
+            job = {'cmd': 'transform', 'year': year, 'masknan': masknan,
+                   'input_path': os.path.join(input_path, input_name),
+                   'output_path': os.path.join(output_path, transform_name)}
 
-            nproc += 1
-            if nproc == nprocs:
-                nproc = 1
+            if n_proc != 0:
+                comm.isend(job, dest=n_proc, tag=1)
+            else:
+                my_jobs.append(job)
+
+            n_jobs += 1
+            n_proc += 1
+
+            if n_proc == n_procs:
+                n_proc = 0
 
         jobs_done = 0
-        while jobs_done < n_jobs:
-            req = comm.irecv()
-            data = req.wait(tag=2)
-            jobs_done += 1
 
+        for job in my_jobs:
+            print("Got job: %s" % job['year'])
+            run_job(job)
+            print("Finished job: %s" % job['year'])
+
+            jobs_done += 1
             print("Progress: %d/%d" % (jobs_done, n_jobs))
 
-        for nproc in range(1, nprocs):
-            comm.isend({'cmd': 'shutdown'}, nproc)
+        while jobs_done < n_jobs:
+
+            req = comm.irecv(tag=2)
+            data = req.wait()
+            jobs_done += 1
+            print("Progress: %d/%d" % (jobs_done, n_jobs))
+
+        for nproc in range(1, n_procs):
+            req = comm.isend({'cmd': 'shutdown'}, nproc, tag=1)
+            req.wait()
+
+        print("Node %d shutting down." % rank)
 
     else:
         while True:
@@ -104,9 +131,7 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
             if job['cmd'] == 'transform':
 
                 print("Got job: %s" % job['year'])
-                df = pd.read_csv(job['input_path'])
-                df = transform(df, job['year'], job['masknan'])
-                df.to_csv(job['output_path'])
+                run_job(job)
                 print("Finished job: %s" % job['year'])
 
                 result = {'year': job['year']}
