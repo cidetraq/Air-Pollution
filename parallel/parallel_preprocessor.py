@@ -243,17 +243,17 @@ def transform_file(year: int, masknan: bool, input_path: str, cache_path: str):
     site=("Only run a specific site", "option", "S", str),
     masknan=("Mask nan rows instead of dropping them", "option", "M", float)
 )
-def main(ingest_path: str = '/some/default/path/here/input',
-         ingest_prefix: str = "",
+def main(ingest_path: str = '/project/lindner/moving/summer2018/Data_structure_3',
+         ingest_prefix: str = "Data_",
          ingest_suffix: str = "",
-         output_path: str = '/some/default/path/here/output',
-         num_jobs: int = 1,
+         output_path: str = '/project/lindner/moving/summer2018/2019/data-formatted/parallel',
+         num_jobs: int = 8,
          year_begin: int = 2000,
          year_end: int = 2018,
          reset_cache: bool = False,
          transform_only: bool = False,
          transform_jobs: int = 1,
-         site: bool = None,
+         site: str = None,
          masknan: float = None):
     workers = WorkerManager(num_jobs=num_jobs)
 
