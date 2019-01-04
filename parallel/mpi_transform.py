@@ -88,7 +88,7 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
         jobs_done = 0
         while jobs_done < n_jobs:
             req = comm.irecv()
-            data = req.wait()
+            data = req.wait(tag=2)
             jobs_done += 1
 
             print("Progress: %d/%d" % (jobs_done, n_jobs))
@@ -98,7 +98,7 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
 
     else:
         while True:
-            req = comm.irecv(source=0)
+            req = comm.irecv(source=0, tag=1)
             job = req.wait()
 
             if job['cmd'] == 'transform':
@@ -110,7 +110,7 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
                 print("Finished job: %s" % job['year'])
 
                 result = {'year': job['year']}
-                req = comm.isend(result, dest=0)
+                req = comm.isend(result, dest=0, tag=2)
                 req.wait()
 
             elif job['cmd'] == 'shutdown':
