@@ -12,7 +12,8 @@
 PROJECT="/project/lindner/moving/summer2018"
 
 module load Anaconda3/python-3.6
+module load OpenMPI/gcc/1.10.7
 source activate "$PROJECT/2019/conda"
 
 cd "$PROJECT/2019"
-LD_LIBRARY_PATH="$PROJECT/2019/conda/lib" mpirun python python-scripts/mpi_transform.py --input-path="$PROJECT/Data_structure_3" --output-path="$PROJECT/2019/data-formatted/parallel"
+mpirun python python-scripts/mpi_transform.py --input-path="$PROJECT/Data_structure_3" --output-path="$PROJECT/2019/data-formatted/parallel"
