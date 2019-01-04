@@ -5,3 +5,4 @@ models/rf-no-all-2000.pkl
 .ipynb_checkpoints
 .DS_Store
 .idea
+__pycache__
