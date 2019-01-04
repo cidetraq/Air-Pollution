@@ -24,11 +24,9 @@ class WindowFunction(object):
 
         sample = 0
         while sample < nd.shape[0] - self.window_size:
-            # TODO: handle masked rows
-
             for i in range(0, d.NUM_INPUTS):
 
-                window_value = np.mean(nd[sample:sample + self.window_size, i])
+                window_value = np.nanmean(nd[sample:sample + self.window_size, i])
 
                 if window_value < self.minmax[i][0]:
                     self.minmax[i][0] = window_value
@@ -77,12 +75,12 @@ class SequenceBuilder(object):
             self.leftovers = nd
             return None
 
+        # TODO: dynamic number of sequences depending on proportion of NaN in sequence and prediction windows
         sequences = np.zeros((num_return_sequences, self.sequence_length, nd.shape[1]))
 
         sample = 0
         while sample < num_return_sequences + (self.sequence_length - len(self.sequence)):
 
-            # TODO: handle masked rows
             self.sequence.append(nd[sample])
 
             # Wait to have a complete sequence
@@ -95,7 +93,7 @@ class SequenceBuilder(object):
             # Labels
             predictions = []
             for name in self.prediction_names:
-                prediction = np.mean(nd[sample + 1: sample + 1 + self.prediction_window, d.INPUT_MAP[name]])
+                prediction = np.nanmean(nd[sample + 1: sample + 1 + self.prediction_window, d.INPUT_MAP[name]])
                 predictions.append(prediction)
 
             self.labels.append(predictions)
@@ -132,20 +130,18 @@ class SequenceFeatureEnricher(object):
         # Add some features
         for sequence in range(0, nd.shape[0]):
 
-            # TODO: handle masked rows
-
             features_to_add = []
 
             if self.regression_features:
                 for f in range(d.ENRICH_START, d.NUM_INPUTS):
-                    m = np.sum(nd[sequence][:, f]) / np.sum(np.arange(0, nd.shape[1]))
+                    m = np.nansum(nd[sequence][:, f]) / np.nansum(np.arange(0, nd.shape[1]))
                     b = nd[sequence][:, f][0]
 
                     features_to_add.extend([m, b])
 
             if self.std_features:
                 for f in range(d.ENRICH_START, d.NUM_INPUTS):
-                    features_to_add.append(np.std(nd[sequence][:, f]))
+                    features_to_add.append(np.nanstd(nd[sequence][:, f]))
 
             self.sample_sequences.append(nd[sequence])
             self.sequence_features.append(features_to_add)

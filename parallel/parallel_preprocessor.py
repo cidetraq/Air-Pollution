@@ -28,6 +28,8 @@ class SiteProcessor(multiprocessing.Process):
         self.index = index
         self.output_path = output_path
 
+        self.masknan = masknan
+
         multiprocessing.Process.__init__(self, target=self._procedure)
 
     def _procedure(self):
@@ -42,8 +44,6 @@ class SiteProcessor(multiprocessing.Process):
                 self._process_data(data)
             if cmd == "get_minmax":
                 self.response_queue.put(self.window_function.minmax)
-            if cmd == "get_gaps":
-                self.response_queue.put(self.sequence_builder.gaps)
             elif cmd == "set_minmax":
                 self.window_function.minmax = data
                 self.response_queue.put(None)
@@ -70,7 +70,6 @@ class SiteProcessor(multiprocessing.Process):
         # Convert to numpy arrays and scale the values
         sample_sequences = np.array(self.sequence_feature_enricher.sample_sequences)
 
-        # TODO: don't scale rows which are all masked
         for i in range(0, d.NUM_INPUTS):
 
             # Bias to start at zero
@@ -115,9 +114,20 @@ class SiteProcessor(multiprocessing.Process):
             description = "%s\n%s" % (str(nd.dtype), str(nd.shape))
             open(os.path.join(self.output_path, out_desc_name), "w").write(description)
 
+        # Add longitude and lattitude
+        latlong_features = np.zeros((sequence_features.shape[0], 2))
+        latlong_features[:, 0] = (d.SITES[self.site]['Latitude'] + 90.) / 180.
+        latlong_features[:, 1] = (d.SITES[self.site]['Longitude'] + 180.) / 360.
+
+        if self.masknan is not None:
+            labels[labels == np.nan] = self.masknan
+            sample_sequences[sample_sequences == np.nan] = self.masknan
+            sequence_features[sequence_features == np.nan] = self.masknan
+
         _save(labels, "labels")
         _save(sample_sequences, "sequences")
         _save(sequence_features, "sequence_features")
+        _save(latlong_features, "latlong_features")
 
     def is_idle(self):
         return self.idle_event.is_set()
@@ -206,7 +216,7 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFram
              'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
              'temp_flag', 'Longitude', 'Latitude'], axis=1)
 
-        df[df.isna()] = masknan
+        df[df.isna()] = np.nan
 
     return df
 
