@@ -1,0 +1,7 @@
+4 clusters
+Traceback (most recent call last):
+  File "../python-scripts/kmeans.py", line 148, in <module>
+    enricher=SequenceFeatureEnricher(n_clusters=n_clusters)
+  File "../python-scripts/kmeans.py", line 58, in __init__
+    for f in range(d.ENRICH_START, d.NUM_INPUTS):
+NameError: name 'd' is not defined
