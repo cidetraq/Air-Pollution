@@ -48,7 +48,7 @@ def main(input_path='/project/lindner/moving/summer2018/2019/data-formatted/para
          output_path='/project/lindner/moving/summer2018/2019/models/rf.best.pickle',
          epochs=1,
          split=0.66,
-         max_depth=20,
+         max_depth=None,
          n_estimators=100,
          n_jobs=-1):
 
