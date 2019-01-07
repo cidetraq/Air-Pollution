@@ -5,23 +5,23 @@
 
 
 profiles={'cluster': 
-          {'in_path': '/project/lindner/moving/summer2018/2019/data-intermediate/', 
-           'out_path':'/project/lindner/moving/summer2018/2019/data-intermediate/new-seqs/'},
+          {'in_path': '/project/lindner/moving/summer2018/2019/data-formatted/parallel/', 
+           'out_path':'/project/lindner/moving/summer2018/2019/data-intermediate/kmeans/'},
           'nicholas': {'in_path':'D:/programming-no-gdrive/air-pollution/data-intermediate/',
                        'out_path':'D:/programming-no-gdrive/air-pollution/data-intermediate/new_seqs/'}}
 
 
-# In[ ]:
+# In[4]:
 
 
 import argparse
 import numpy as np
+import matplotlib.pyplot as plt
+import pickle
 parser = argparse.ArgumentParser()
 parser.add_argument("-u", '--user', type=str,
                     help="cluster, nicholas, carroll")
 args = parser.parse_args()
-import os
-args.user='cluster'
 
 
 # In[13]:
@@ -37,8 +37,8 @@ if args.user=='nicholas':
 
 if args.user=='cluster':
     #from processor_pipeline_nicholas import SequenceFeatureEnricher
-    from processor_pipeline_nicholas import SequenceBuilder
-    import d
+    from parallel_scripts.processor_pipeline_nicholas import SequenceBuilder
+    import parallel_scripts.d as d
 
 
 # In[40]:
@@ -94,25 +94,19 @@ out_path=profiles[args.user]['out_path']
 # In[17]:
 
 
-nd=np.load(open(in_path+'windowed_2000.pkl', 'rb'))
+sequences=np.load(open(in_path+'000_sequences.npy', 'rb'))
 
+
+# ###From nd
+# nd=np.load(open(in_path+'windowed_2000.pkl', 'rb'))
+# from sklearn.preprocessing import MinMaxScaler
+# scaler=MinMaxScaler()
+# nd=scaler.fit_transform(nd)
+# builder=SequenceBuilder(sequence_length=d.SEQUENCE_LENGTH, prediction_window=d.PREDICTION_WINDOW, prediction_names=d.OUTPUT_COLUMNS)
+# sequences=builder.process(nd)
+# ###
 
 # In[ ]:
-
-
-from sklearn.preprocessing import MinMaxScaler
-scaler=MinMaxScaler()
-nd=scaler.fit_transform(nd)
-
-
-# In[ ]:
-
-
-builder=SequenceBuilder(sequence_length=d.SEQUENCE_LENGTH, prediction_window=d.PREDICTION_WINDOW, prediction_names=d.OUTPUT_COLUMNS)
-sequences=builder.process(nd)
-
-
-# In[45]:
 
 
 #Reshaping
@@ -145,28 +139,29 @@ data_sequences = data_sequences.reshape(data_sequences.shape[0], data_sequences.
 
 #For individually
 #For all at once
+site_id='48_201_1034'
 labels_all=[]
 cluster_centers_all=[]
 inertias=[]
-cluster_sizes=[]
+number_clusters=[]
 for n_clusters in range(4,20,2):
     print(str(n_clusters)+' clusters')
     enricher=SequenceFeatureEnricher(n_clusters=n_clusters)
     labels, cluster_centers,inertia=enricher.kmeans_process(data_sequences)
-    pickle.dump(labels, open(out_path+'labels_2000_'+str(n_clusters)+'clusters.ndarray', 'wb'), protocol=4)
-    pickle.dump(cluster_centers, open(out_path+'cluster_centers_2000_'+str(n_clusters)+'clusters.ndarray', 'wb'), protocol=4)
-    pickle.dump(inertia, open(out_path+'inertia_2000_'+str(n_clusters)+'clusters.ndarray', 'wb'), protocol=4)
+    pickle.dump(labels, open(out_path+'labels_'+site_id+'_'+str(n_clusters)+'clusters.ndarray', 'wb'), protocol=4)
+    pickle.dump(cluster_centers, open(out_path+'cluster_centers_'+site_id+'_'+str(n_clusters)+'clusters.ndarray', 'wb'), protocol=4)
+    pickle.dump(inertia, open(out_path+'inertia_'+site_id+'_'+str(n_clusters)+'clusters.ndarray', 'wb'), protocol=4)
     inertias.append(inertia)
-    cluster_sizes.append(n_clusters)
+    number_clusters.append(n_clusters)
 
 
-# In[41]:
+# In[17]:
 
 
-import matplotlib.pyplot as plt
-plt.plot(cluster_sizes, inertias, 'go')
-plt.xlabel('Cluster sizes')
-plt.ylabel('Distances to center of clusters')
+plt.plot(number_clusters, inertias, 'go')
+plt.xlabel('Number of clusters')
+plt.ylabel('SSE Distances to center of clusters')
 plt.title('Plot of K Means k values')
 plt.savefig(out_path+'kmeans_plot.png')
+plt.show()
 
