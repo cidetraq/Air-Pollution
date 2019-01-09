@@ -108,14 +108,12 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
             print("Finished job: %s" % job['year'])
 
             jobs_done += 1
-            print("Progress: %d/%d" % (jobs_done, n_jobs))
 
         while jobs_done < n_jobs:
 
             req = comm.irecv(tag=2)
             data = req.wait()
             jobs_done += 1
-            print("Progress: %d/%d" % (jobs_done, n_jobs))
 
         for nproc in range(1, n_procs):
             req = comm.isend({'cmd': 'shutdown'}, nproc, tag=1)
