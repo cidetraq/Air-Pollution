@@ -5,36 +5,46 @@ import plac
 import os
 
 
-def transform(df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFrame:
+def transform(df: pd.DataFrame, year: int, region: str, masknan: float = None) -> pd.DataFrame:
     if masknan is None:
+        if region!='houston':
+        
+            if year < 2014:
+                df = df[df['nox_flag'] == 'VAL']
+                df = df[df['no_flag'] == 'VAL']
+                df = df[df['no2_flag'] == 'VAL']
+                df = df[df['o3_flag'] == "VAL"]
+                df = df[df['temp_flag'] == "VAL"]
+            if year >= 2014:
+                df = df[df['nox_flag'] == 'K']
+                df = df[df['no_flag'] == 'K']
+                df = df[df['o3_flag'] == 'K']
+                df = df[df['temp_flag'] == 'K']
 
-        if year < 2014:
-            df = df[df['nox_flag'] == 'VAL']
-            df = df[df['no_flag'] == 'VAL']
-            df = df[df['no2_flag'] == 'VAL']
-            df = df[df['o3_flag'] == "VAL"]
-            df = df[df['temp_flag'] == "VAL"]
-        if year >= 2014:
-            df = df[df['nox_flag'] == 'K']
-            df = df[df['no_flag'] == 'K']
-            df = df[df['o3_flag'] == 'K']
-            df = df[df['temp_flag'] == 'K']
+            df = df[~df['winddir'].isna()]
+            df = df[~df['AQS_Code'].isna()]
 
-        df = df[~df['winddir'].isna()]
-        df = df[~df['AQS_Code'].isna()]
+            df = df.drop(
+                ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
+                 'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
+                 'temp_flag', 'Longitude', 'Latitude'], axis=1)
 
-        df = df.drop(
-            ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
-             'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
-             'temp_flag', 'Longitude', 'Latitude'], axis=1)
-
-        df = df.dropna()
-
+            df = df.dropna()
+        else:
+            greater_houston_ids=[481570696, 480391004,]
+            houston_ids=[482010051,482010558,482010572,482010551,482016000,482010669,482010695,482010307,482010670,482010673,482010671,482010069,482011035,482010057,482011049,482010803,482011034,482011052,482010024]
+            houston_ids=format_AQS(houston_ids_pre)
+            #index=np.arange(len(houston_ids))
+            houston_df=df
+            houston_df['houston_site']=houston_df['AQS_Code'].apply(houston_site)
+            df=houston_df[houston_df['houston_site']==True]
+            df=df.drop(['houston_site'], axis=1)
     df['wind_x_dir'] = df['windspd'] * np.cos(df['winddir'] * (np.pi / 180))
     df['wind_y_dir'] = df['windspd'] * np.sin(df['winddir'] * (np.pi / 180))
     df['hour'] = pd.to_datetime(df['epoch'], unit='s').dt.hour
     df['day_of_year'] = pd.Series(pd.to_datetime(df['epoch'], unit='s'))
     df['day_of_year'] = df['day_of_year'].dt.dayofyear
+    
 
     if masknan is not None:
         df = df.drop(
@@ -46,10 +56,23 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFram
 
     return df
 
+def houston_site(code):
+    if code in houston_ids:
+        return True
+    
+def format_AQS(ids):
+    new_ids=[]
+    for hou in ids: 
+        hou=list(str(hou))
+        hou.insert(2, '_')
+        hou.insert(7, '_')
+        hou="".join(hou)
+        new_ids.append(hou)
+    return new_ids
 
 def run_job(job: dict):
     df = pd.read_csv(job['input_path'])
-    df = transform(df, job['year'], job['masknan'])
+    df = transform(df, job['year'], job['masknan'], job['region'])
     df.to_csv(job['output_path'])
 
 
@@ -60,7 +83,8 @@ def run_job(job: dict):
     output_path=("Path to write the resulting numpy sequences / transform cache", "option", "o", str),
     year_begin=("First year to process", "option", "b", int),
     year_end=("Year to stop with", "option", "e", int),
-    masknan=("Mask nan rows instead of dropping them", "option", "M", float)
+    masknan=("Mask nan rows instead of dropping them", "option", "M", float),
+    region=('Region of Texas. Default: houston', 'option', "r", str)
 )
 def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3',
          input_prefix: str = "Data_",
@@ -68,7 +92,8 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
          output_path: str = '/project/lindner/moving/summer2018/2019/data-formatted/parallel',
          year_begin: int = 2000,
          year_end: int = 2018,
-         masknan: float = None):
+         masknan: float = None,
+         region: str= "houston"):
 
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
@@ -87,7 +112,7 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
 
             job = {'cmd': 'transform', 'year': year, 'masknan': masknan,
                    'input_path': os.path.join(input_path, input_name),
-                   'output_path': os.path.join(output_path, transform_name)}
+                   'output_path': os.path.join(output_path, transform_name), 'region': region}
 
             if n_proc != 0:
                 comm.isend(job, dest=n_proc, tag=1)
