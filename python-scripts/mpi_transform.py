@@ -5,7 +5,7 @@ import plac
 import os
 
 
-def transform(df: pd.DataFrame, year: int, region: str, masknan: float = None) -> pd.DataFrame:
+def transform(df: pd.DataFrame, year: int, masknan: float = None, region: str) -> pd.DataFrame:
     if masknan is None:
         if region!='houston':
         
@@ -34,10 +34,9 @@ def transform(df: pd.DataFrame, year: int, region: str, masknan: float = None) -
             greater_houston_ids=[481570696, 480391004,]
             houston_ids=[482010051,482010558,482010572,482010551,482016000,482010669,482010695,482010307,482010670,482010673,482010671,482010069,482011035,482010057,482011049,482010803,482011034,482011052,482010024]
             houston_ids=format_AQS(houston_ids_pre)
-            #index=np.arange(len(houston_ids))
             houston_df=df
             houston_df['houston_site']=houston_df['AQS_Code'].apply(houston_site)
-            df=houston_df[houston_df['houston_site']==True]
+            df=houston_df[houston_df['houston_site']=='hou']
             df=df.drop(['houston_site'], axis=1)
     df['wind_x_dir'] = df['windspd'] * np.cos(df['winddir'] * (np.pi / 180))
     df['wind_y_dir'] = df['windspd'] * np.sin(df['winddir'] * (np.pi / 180))
@@ -47,25 +46,26 @@ def transform(df: pd.DataFrame, year: int, region: str, masknan: float = None) -
     
 
     if masknan is not None:
-        df = df.drop(
+        df[df.isna()] = np.nan
+        
+    df = df.drop(
             ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
              'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
-             'temp_flag', 'Longitude', 'Latitude'], axis=1)
-
-        df[df.isna()] = np.nan
-
+             'temp_flag', 'Longitude', 'Latitude'], axis=1)    
     return df
 
 def houston_site(code):
     if code in houston_ids:
-        return True
+        return 'hou'
+    else:
+        return 'not'
     
 def format_AQS(ids):
     new_ids=[]
     for hou in ids: 
         hou=list(str(hou))
         hou.insert(2, '_')
-        hou.insert(7, '_')
+        hou.insert(6, '_')
         hou="".join(hou)
         new_ids.append(hou)
     return new_ids
