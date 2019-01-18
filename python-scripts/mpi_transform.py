@@ -5,7 +5,7 @@ import plac
 import os
 
 
-def transform(df: pd.DataFrame, year: int, masknan: float = None, region: str) -> pd.DataFrame:
+def transform(region: str, df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFrame:
     if masknan is None:
         if region!='houston':
         
@@ -32,8 +32,9 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None, region: str) -
             df = df.dropna()
         else:
             greater_houston_ids=[481570696, 480391004,]
+            global houston_ids
             houston_ids=[482010051,482010558,482010572,482010551,482016000,482010669,482010695,482010307,482010670,482010673,482010671,482010069,482011035,482010057,482011049,482010803,482011034,482011052,482010024]
-            houston_ids=format_AQS(houston_ids_pre)
+            houston_ids=format_AQS(houston_ids)
             houston_df=df
             houston_df['houston_site']=houston_df['AQS_Code'].apply(houston_site)
             df=houston_df[houston_df['houston_site']=='hou']
@@ -51,7 +52,7 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None, region: str) -
     df = df.drop(
             ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
              'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
-             'temp_flag', 'Longitude', 'Latitude'], axis=1)    
+             'temp_flag'], axis=1)    
     return df
 
 def houston_site(code):
@@ -72,8 +73,8 @@ def format_AQS(ids):
 
 def run_job(job: dict):
     df = pd.read_csv(job['input_path'])
-    df = transform(df, job['year'], job['masknan'], job['region'])
-    df.to_csv(job['output_path'])
+    df = transform(job['region'], df, job['year'], job['masknan'])
+    df.to_csv(job['output_path'], index=False)
 
 
 @plac.annotations(

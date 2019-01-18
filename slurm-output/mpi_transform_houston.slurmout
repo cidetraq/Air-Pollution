@@ -1,0 +1,5 @@
+/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py:328: DtypeWarning: Columns (0,6,8,10,12,14,16,18,20,22,24,26,28) have mixed types. Specify dtype option on import or set low_memory=False.
+  cmd, result = parser.consume(arglist)
+Got job: 2000
+Finished job: 2000
+Node 0 shutting down.
