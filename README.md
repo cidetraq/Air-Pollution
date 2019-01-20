@@ -1,5 +1,13 @@
 # Air-Pollution 
 
+Update 1/17/2019:
+With the start of the new school semester, both Nicholas and Carroll are adjusting to their new schedules. 
+Currently we have gone back to data processing and are looking at interpolation using geographically nearby sites for missing data. 
+
+Some ideas: 
+we could try to interpolate using a diffisuion and vector field model
+or use an extended kallman filter
+
 Update 1/4/2019: 
 To-Do:
 1. Calculate min and max values for all columns ahead of time to assist with min max scaling
