@@ -51,14 +51,15 @@ def transform_container(df, year, columns, epoch_splits, region):
 
 def run_job(job: dict, output_path):
     newrows = transform(job['df'], job['columns'] , job['split'])
-    newrows.to_csv(output_path+'partial/'+'ds2_split_'+str(job['index'])+'_'+job['region']+'_'+str(job['year']), index=False)
+    newrows.to_csv(output_path+'partial/'+'ds2_split_'+str(job['index'])+'_'+job['region']+'_'+str(job['year'])+'.csv', index=False)
     
-def make_output(job: dict, output_path):
+def make_output(job: dict, output_path, region):
     reshaped_data=pd.DataFrame()
+    year=job['year']
     for year_file in job['year_files']:
         df=pd.read_csv(output_path+'/partial/'+year_file)
         reshaped_data=pd.concat([reshaped_data, df])
-    reshaped_data.to_csv(output_path+'ds2_'+region+'_'+str(year))
+    reshaped_data.to_csv(output_path+'ds2_'+region+'_'+str(year)+'.csv')
 
 def make_output_container(output_path, year_begin, year_end, region):
     global n_proc
@@ -69,7 +70,7 @@ def make_output_container(output_path, year_begin, year_end, region):
     filenames=os.listdir(dir_path)
     years=list(np.arange(year_begin,year_end))
     for year in years:
-        year_files=[filename for filename in filenames if year in filename]
+        year_files=[filename for filename in filenames if str(year) in filename]
         job={'year_files': year_files, 'year': year}
         if n_proc != 0:
             comm.isend(job, dest=n_proc, tag=1)
@@ -88,23 +89,25 @@ def make_output_container(output_path, year_begin, year_end, region):
         year_begin=("First year to process", "option", "b", int),
         year_end=("Year to stop with", "option", "e", int),
         masknan=("Mask nan rows instead of dropping them", "option", "M", float),
-        region=('Region of Texas. Default: houston', 'option', "r", str)
+        region=('Region of Texas. Default: houston', 'option', "r", str),
+        skip_to_output=('Skip to the concatenation of long rows and output step. Default: False', 'option', 'ff', bool)
 )
 def main(input_path: str = '/project/lindner/moving/summer2018/2019/data-formatted/mpi-houston/',
          input_prefix: str = "Transformed_Data_",
          input_suffix: str = "",
-         output_path: str = '/project/lindner/moving/summer2018/2019/data-formatted/ds2/',
+         output_path: str = '/project/lindner/moving/summer2018/2019/data-formatted/mpi-houston/ds2/',
          year_begin: int = 2000,
          year_end: int = 2001,
          masknan: float = None,
-         region: str= "houston"):
+         region: str= "houston",
+         skip_to_output: bool=False):
     
     global n_proc
-    global n_job
+    global n_jobs
     global my_jobs
     global n_procs
-    
-    if rank == 0:
+    jobs_done=0
+    if rank == 0 and skip_to_output==False:
         
         for year_idx, year in enumerate(range(year_begin, year_end)):
 
@@ -122,11 +125,14 @@ def main(input_path: str = '/project/lindner/moving/summer2018/2019/data-formatt
             columns=df.columns 
             reshaped_data=pd.DataFrame()
             transform_container(df, year, columns, epoch_splits, region)          
-
+            
+            
         for job in my_jobs:
-            print("Got job: %s_%s" % (job['split'], job['year']))
+            if job['split']%1000==0:
+                print("Got job: %s_%s" % (job['index'], job['year']))
             newrows=run_job(job, output_path)
-            print("Finished job: %s_%s" % (job['split'], job['year']))
+            if job['split']%1000==0:
+                print("Finished job: %s_%s" % (job['index'], job['year']))
             
             jobs_done += 1
 
@@ -142,16 +148,17 @@ def main(input_path: str = '/project/lindner/moving/summer2018/2019/data-formatt
 
         print("Node %d shutting down." % rank)
 
-    else:
+    elif skip_to_output==False:
         while True:
             req = comm.irecv(source=0, tag=1)
             job = req.wait()
 
             if job['cmd'] == 'transform':
-
-                print("Got job: %s_%s" % (job['split'], job['year']))
+                if job['split']%1000==0:
+                    print("Got job: %s_%s" % (job['split'], job['year']))
                 run_job(job)
-                print("Finished job: %s_%s" % (job['split'], job['year']))
+                if job['split']%1000==0:
+                    print("Finished job: %s_%s" % (job['split'], job['year']))
 
                 result = {'year': job['year']}
                 req = comm.isend(result, dest=0, tag=2)
@@ -161,17 +168,14 @@ def main(input_path: str = '/project/lindner/moving/summer2018/2019/data-formatt
                 print("Node %d shutting down." % rank)
                 return
            
-    
-    if jobs_done>1:
-        if jobs_done==n_jobs: 
-            my_jobs=[]
-            n_proc = 0
-            n_jobs = 0
-            make_output_container(output_path, year_begin, year_end, region)
+    my_jobs=[]
+    n_proc = 0
+    n_jobs = 0
+    make_output_container(output_path, year_begin, year_end, region)
             
     for job in my_jobs:
         print("Got job: %s" % (job['year']))
-        make_output(job, output_path)
+        make_output(job, output_path, region)
         print("Finished job: %s" % (job['year']))
         jobs_done += 1
 
