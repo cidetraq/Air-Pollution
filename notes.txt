@@ -1,0 +1,19 @@
+Opuntia notes
+path to pollution: 
+cd ~
+cd projects/lindner/moving/pollutants
+cd summer2018/Python
+srun -N 1 -n 1 --mem=1gb -t 00:00:45 --pty /bin/bash
+
+to see info like wait time:
+scontrol show info job [jobid]
+
+compute-2-40 is the 1TB node and compute-2-[41,42] the 512TB
+
+
+http://baragon.hpcc.uh.edu/ganglia/?p=2&c=Opuntia
+
+Windows notes:
+To use MPI:
+mpiexec -np <number of process> python <your MPI4Py python script>
+

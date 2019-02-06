@@ -11,9 +11,6 @@ from mpi4py import MPI
 n_proc = 0
 n_jobs = 0
 my_jobs = []
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-n_procs = comm.Get_size()
 
 def transform(original_data, columns, split):
     newrows=pd.DataFrame()
@@ -102,6 +99,9 @@ def main(input_path: str = '/project/lindner/moving/summer2018/2019/data-formatt
          region: str= "houston",
          skip_to_output: bool=False):
     
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    n_procs = comm.Get_size()
     global n_proc
     global n_jobs
     global my_jobs
