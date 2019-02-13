@@ -17,3 +17,4 @@ Windows notes:
 To use MPI:
 mpiexec -np <number of process> python <your MPI4Py python script>
 
+I'm on linux now
