@@ -1,5 +1,6 @@
 data-sample/large
 data-sample
+descriptive-output/screenshots
 models/sample_100k_2000
 models/rf-no-all-2000-2-sample.pkl
 models/rf-no-all-2000.pkl
