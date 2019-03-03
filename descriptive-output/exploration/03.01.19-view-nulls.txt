@@ -1,0 +1,1268 @@
+Working with Chinmay's 71 "valid" sites with at least one data point per month on selected columns 
+
+Data for site: 48_245_0009
+
+Pollutant: no
+
+Nulls for hour 0: 1
+
+Nulls for hour 1: 1
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 0
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 0
+
+Nulls for hour 15: 0
+
+Nulls for hour 16: 0
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 0
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Pollutant: no2
+
+Nulls for hour 0: 1
+
+Nulls for hour 1: 1
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 0
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 0
+
+Nulls for hour 15: 0
+
+Nulls for hour 16: 0
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 0
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Pollutant: nox
+
+Nulls for hour 0: 1
+
+Nulls for hour 1: 1
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 0
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 0
+
+Nulls for hour 15: 0
+
+Nulls for hour 16: 0
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 0
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Pollutant: o3
+
+Nulls for hour 0: 1
+
+Nulls for hour 1: 1
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 0
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 0
+
+Nulls for hour 15: 0
+
+Nulls for hour 16: 0
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 0
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Data for site: 48_453_0014
+
+Pollutant: no
+
+Nulls for hour 0: 365
+
+Nulls for hour 1: 365
+
+Nulls for hour 2: 365
+
+Nulls for hour 3: 365
+
+Nulls for hour 4: 365
+
+Nulls for hour 5: 365
+
+Nulls for hour 6: 365
+
+Nulls for hour 7: 365
+
+Nulls for hour 8: 365
+
+Nulls for hour 9: 365
+
+Nulls for hour 10: 365
+
+Nulls for hour 11: 365
+
+Nulls for hour 12: 365
+
+Nulls for hour 13: 365
+
+Nulls for hour 14: 365
+
+Nulls for hour 15: 365
+
+Nulls for hour 16: 365
+
+Nulls for hour 17: 365
+
+Nulls for hour 18: 365
+
+Nulls for hour 19: 365
+
+Nulls for hour 20: 365
+
+Nulls for hour 21: 365
+
+Nulls for hour 22: 365
+
+Nulls for hour 23: 365
+
+Pollutant: no2
+
+Nulls for hour 0: 365
+
+Nulls for hour 1: 365
+
+Nulls for hour 2: 365
+
+Nulls for hour 3: 365
+
+Nulls for hour 4: 365
+
+Nulls for hour 5: 365
+
+Nulls for hour 6: 365
+
+Nulls for hour 7: 365
+
+Nulls for hour 8: 365
+
+Nulls for hour 9: 365
+
+Nulls for hour 10: 365
+
+Nulls for hour 11: 365
+
+Nulls for hour 12: 365
+
+Nulls for hour 13: 365
+
+Nulls for hour 14: 365
+
+Nulls for hour 15: 365
+
+Nulls for hour 16: 365
+
+Nulls for hour 17: 365
+
+Nulls for hour 18: 365
+
+Nulls for hour 19: 365
+
+Nulls for hour 20: 365
+
+Nulls for hour 21: 365
+
+Nulls for hour 22: 365
+
+Nulls for hour 23: 365
+
+Pollutant: nox
+
+Nulls for hour 0: 365
+
+Nulls for hour 1: 365
+
+Nulls for hour 2: 365
+
+Nulls for hour 3: 365
+
+Nulls for hour 4: 365
+
+Nulls for hour 5: 365
+
+Nulls for hour 6: 365
+
+Nulls for hour 7: 365
+
+Nulls for hour 8: 365
+
+Nulls for hour 9: 365
+
+Nulls for hour 10: 365
+
+Nulls for hour 11: 365
+
+Nulls for hour 12: 365
+
+Nulls for hour 13: 365
+
+Nulls for hour 14: 365
+
+Nulls for hour 15: 365
+
+Nulls for hour 16: 365
+
+Nulls for hour 17: 365
+
+Nulls for hour 18: 365
+
+Nulls for hour 19: 365
+
+Nulls for hour 20: 365
+
+Nulls for hour 21: 365
+
+Nulls for hour 22: 365
+
+Nulls for hour 23: 365
+
+Pollutant: o3
+
+Nulls for hour 0: 3
+
+Nulls for hour 1: 2
+
+Nulls for hour 2: 2
+
+Nulls for hour 3: 2
+
+Nulls for hour 4: 3
+
+Nulls for hour 5: 4
+
+Nulls for hour 6: 4
+
+Nulls for hour 7: 4
+
+Nulls for hour 8: 4
+
+Nulls for hour 9: 4
+
+Nulls for hour 10: 5
+
+Nulls for hour 11: 5
+
+Nulls for hour 12: 5
+
+Nulls for hour 13: 5
+
+Nulls for hour 14: 5
+
+Nulls for hour 15: 3
+
+Nulls for hour 16: 2
+
+Nulls for hour 17: 2
+
+Nulls for hour 18: 2
+
+Nulls for hour 19: 2
+
+Nulls for hour 20: 2
+
+Nulls for hour 21: 2
+
+Nulls for hour 22: 2
+
+Nulls for hour 23: 2
+
+Data for site: 48_355_0025
+
+Pollutant: no
+
+Nulls for hour 0: 365
+
+Nulls for hour 1: 365
+
+Nulls for hour 2: 365
+
+Nulls for hour 3: 365
+
+Nulls for hour 4: 365
+
+Nulls for hour 5: 365
+
+Nulls for hour 6: 365
+
+Nulls for hour 7: 365
+
+Nulls for hour 8: 365
+
+Nulls for hour 9: 365
+
+Nulls for hour 10: 365
+
+Nulls for hour 11: 365
+
+Nulls for hour 12: 365
+
+Nulls for hour 13: 365
+
+Nulls for hour 14: 365
+
+Nulls for hour 15: 365
+
+Nulls for hour 16: 365
+
+Nulls for hour 17: 365
+
+Nulls for hour 18: 365
+
+Nulls for hour 19: 365
+
+Nulls for hour 20: 365
+
+Nulls for hour 21: 365
+
+Nulls for hour 22: 365
+
+Nulls for hour 23: 365
+
+Pollutant: no2
+
+Nulls for hour 0: 365
+
+Nulls for hour 1: 365
+
+Nulls for hour 2: 365
+
+Nulls for hour 3: 365
+
+Nulls for hour 4: 365
+
+Nulls for hour 5: 365
+
+Nulls for hour 6: 365
+
+Nulls for hour 7: 365
+
+Nulls for hour 8: 365
+
+Nulls for hour 9: 365
+
+Nulls for hour 10: 365
+
+Nulls for hour 11: 365
+
+Nulls for hour 12: 365
+
+Nulls for hour 13: 365
+
+Nulls for hour 14: 365
+
+Nulls for hour 15: 365
+
+Nulls for hour 16: 365
+
+Nulls for hour 17: 365
+
+Nulls for hour 18: 365
+
+Nulls for hour 19: 365
+
+Nulls for hour 20: 365
+
+Nulls for hour 21: 365
+
+Nulls for hour 22: 365
+
+Nulls for hour 23: 365
+
+Pollutant: nox
+
+Nulls for hour 0: 365
+
+Nulls for hour 1: 365
+
+Nulls for hour 2: 365
+
+Nulls for hour 3: 365
+
+Nulls for hour 4: 365
+
+Nulls for hour 5: 365
+
+Nulls for hour 6: 365
+
+Nulls for hour 7: 365
+
+Nulls for hour 8: 365
+
+Nulls for hour 9: 365
+
+Nulls for hour 10: 365
+
+Nulls for hour 11: 365
+
+Nulls for hour 12: 365
+
+Nulls for hour 13: 365
+
+Nulls for hour 14: 365
+
+Nulls for hour 15: 365
+
+Nulls for hour 16: 365
+
+Nulls for hour 17: 365
+
+Nulls for hour 18: 365
+
+Nulls for hour 19: 365
+
+Nulls for hour 20: 365
+
+Nulls for hour 21: 365
+
+Nulls for hour 22: 365
+
+Nulls for hour 23: 365
+
+Pollutant: o3
+
+Nulls for hour 0: 0
+
+Nulls for hour 1: 1
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 0
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 1
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 0
+
+Nulls for hour 15: 0
+
+Nulls for hour 16: 0
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 0
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Data for site: 48_201_0024
+
+Pollutant: no
+
+Nulls for hour 0: 3
+
+Nulls for hour 1: 2
+
+Nulls for hour 2: 49
+
+Nulls for hour 3: 49
+
+Nulls for hour 4: 50
+
+Nulls for hour 5: 3
+
+Nulls for hour 6: 11
+
+Nulls for hour 7: 8
+
+Nulls for hour 8: 3
+
+Nulls for hour 9: 3
+
+Nulls for hour 10: 3
+
+Nulls for hour 11: 3
+
+Nulls for hour 12: 3
+
+Nulls for hour 13: 3
+
+Nulls for hour 14: 5
+
+Nulls for hour 15: 5
+
+Nulls for hour 16: 8
+
+Nulls for hour 17: 5
+
+Nulls for hour 18: 5
+
+Nulls for hour 19: 3
+
+Nulls for hour 20: 3
+
+Nulls for hour 21: 4
+
+Nulls for hour 22: 4
+
+Nulls for hour 23: 4
+
+Pollutant: no2
+
+Nulls for hour 0: 0
+
+Nulls for hour 1: 0
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 0
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 0
+
+Nulls for hour 15: 0
+
+Nulls for hour 16: 1
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 0
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Pollutant: nox
+
+Nulls for hour 0: 0
+
+Nulls for hour 1: 0
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 0
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 0
+
+Nulls for hour 15: 0
+
+Nulls for hour 16: 1
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 0
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Pollutant: o3
+
+Nulls for hour 0: 0
+
+Nulls for hour 1: 0
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 0
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 0
+
+Nulls for hour 15: 0
+
+Nulls for hour 16: 1
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 0
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Data for site: 48_361_1001
+
+Pollutant: no
+
+Nulls for hour 0: 12
+
+Nulls for hour 1: 9
+
+Nulls for hour 2: 112
+
+Nulls for hour 3: 110
+
+Nulls for hour 4: 108
+
+Nulls for hour 5: 10
+
+Nulls for hour 6: 9
+
+Nulls for hour 7: 9
+
+Nulls for hour 8: 9
+
+Nulls for hour 9: 9
+
+Nulls for hour 10: 9
+
+Nulls for hour 11: 9
+
+Nulls for hour 12: 9
+
+Nulls for hour 13: 9
+
+Nulls for hour 14: 9
+
+Nulls for hour 15: 11
+
+Nulls for hour 16: 12
+
+Nulls for hour 17: 12
+
+Nulls for hour 18: 11
+
+Nulls for hour 19: 12
+
+Nulls for hour 20: 14
+
+Nulls for hour 21: 14
+
+Nulls for hour 22: 11
+
+Nulls for hour 23: 12
+
+Pollutant: no2
+
+Nulls for hour 0: 0
+
+Nulls for hour 1: 0
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 0
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 0
+
+Nulls for hour 15: 0
+
+Nulls for hour 16: 0
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 0
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Pollutant: nox
+
+Nulls for hour 0: 0
+
+Nulls for hour 1: 0
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 0
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 0
+
+Nulls for hour 15: 0
+
+Nulls for hour 16: 0
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 0
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Pollutant: o3
+
+Nulls for hour 0: 0
+
+Nulls for hour 1: 0
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 0
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 0
+
+Nulls for hour 15: 0
+
+Nulls for hour 16: 0
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 0
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Data for site: 48_141_0037
+
+Pollutant: no
+
+Nulls for hour 0: 0
+
+Nulls for hour 1: 0
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 1
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 1
+
+Nulls for hour 15: 1
+
+Nulls for hour 16: 1
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 1
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Pollutant: no2
+
+Nulls for hour 0: 0
+
+Nulls for hour 1: 0
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 1
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 1
+
+Nulls for hour 15: 1
+
+Nulls for hour 16: 1
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 1
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Pollutant: nox
+
+Nulls for hour 0: 0
+
+Nulls for hour 1: 0
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 1
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 1
+
+Nulls for hour 15: 1
+
+Nulls for hour 16: 1
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 1
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Pollutant: o3
+
+Nulls for hour 0: 0
+
+Nulls for hour 1: 0
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 1
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 1
+
+Nulls for hour 15: 1
+
+Nulls for hour 16: 1
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 1
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Data for site: 48_439_1002
+
+Pollutant: no
+
+Nulls for hour 0: 0
+
+Nulls for hour 1: 0
+
+Nulls for hour 2: 0
+
+Nulls for hour 3: 0
+
+Nulls for hour 4: 0
+
+Nulls for hour 5: 0
+
+Nulls for hour 6: 0
+
+Nulls for hour 7: 0
+
+Nulls for hour 8: 0
+
+Nulls for hour 9: 0
+
+Nulls for hour 10: 0
+
+Nulls for hour 11: 0
+
+Nulls for hour 12: 0
+
+Nulls for hour 13: 0
+
+Nulls for hour 14: 0
+
+Nulls for hour 15: 0
+
+Nulls for hour 16: 0
+
+Nulls for hour 17: 0
+
+Nulls for hour 18: 0
+
+Nulls for hour 19: 0
+
+Nulls for hour 20: 0
+
+Nulls for hour 21: 0
+
+Nulls for hour 22: 0
+
+Nulls for hour 23: 0
+
+Pollutant: no2
+

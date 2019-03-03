@@ -1,0 +1,5 @@
+sys:1: DtypeWarning: Columns (0,6,8,10,12,14,16,18,20,22,24,26,28) have mixed types. Specify dtype option on import or set low_memory=False.
+Traceback (most recent call last):
+  File "/project/lindner/moving/summer2018/2019/python-scripts/exploration/03.01.19-view-nulls.py", line 55, in <module>
+    print("Data for site: "+aqs_code)
+TypeError: must be str, not float
