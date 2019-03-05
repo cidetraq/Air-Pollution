@@ -1,0 +1,19 @@
+03.04.19
+
+The most important thing to come out of this meeting was the fact that we need to take better notes. 
+Two main types of notes:
+Meeting notes (here)
+	Every meeting discuss progress since last time and goals for next time
+Documentation
+	Every output file should have a file explaining:
+		What script produced the data
+		When it was run
+	Every script should have a file explaining:
+		Its outputs
+		Its inputs
+		Its purpose
+Documentation will be kept in the same directory as the file being explained.
+
+Other than note taking, we agreed that the reason we were doing the null exploration is as a step towards spatial data interpolation. 
+Two scripts were successfully executed, those being view-nulls for hourly nulls and restrict-hours for hourly averages. 
+The output of view nulls is currently in descriptive-output/exploration/not_all_null.csv but may be moved in the future. The 
