@@ -1,5 +1,17 @@
 # Air-Pollution 
 
+!!!!!!!!!!!!!!!!
+For latest meeting notes, refer to the GitHub. Documentation will be updated on the cluster here on an ongoing basis. 
+GitHub: https://github.com/cidetraq/Air-Pollution
+Meeting notes: https://github.com/cidetraq/Air-Pollution/tree/master/notes/meetings
+!!!!!!!!!!!!!!!!
+
+Update 03.04.19: 
+Documentation is key. 
+Carroll will soon be back in action. 
+Nicholas has been working a bit on nulls and averaging.
+The big idea: to get a preliminary good-enough ground truth dataset that then can be used with spatial interpolation on the original. This will produce the gold dataset on which to train the final models for prediction.
+
 Update 1/17/2019:
 With the start of the new school semester, both Nicholas and Carroll are adjusting to their new schedules. 
 Currently we have gone back to data processing and are looking at interpolation using geographically nearby sites for missing data. 
