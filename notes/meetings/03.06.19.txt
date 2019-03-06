@@ -7,4 +7,18 @@ Chinmay has now resumed working on Air Pollution and has been added to the GitHu
 **************
 
 We can graph things using Kepler.gl , for instance,
-graph hourly data averages of "clean" data 
+graph hourly data averages of "clean" data.
+
+What Nicholas should do for now: 
+Use Data-formatting-2000-2013 (the oldest script he made) to narrow down Data_2000.csv in Data Structure 3.
+Generate hourly averages using this narrowed data. 
+Compare the existing hourly averages to this "new" one and see which is bigger / better. 
+Data-Formatting-2000-2013 restricts to only sites which have "VAL" in their flag codes and have all wind data present. 
+
+Also make sure to not drop Latitude and Longitude in the hourly averages. 
+Maybe add them back in to the previously generated hrly averages. 
+According to Chinmay using Latitude and Longitude will improve results significantly. 
+
+Chinmay plans to do more descriptive statistics on Data Structure 3 for instance:
+to identify outliers maybe flag them or delete them
+(write your goals here @Chinmay) 
