@@ -1,0 +1,10 @@
+Note about Data-Formatting 2000-2013:
+
+According to Chinmay, there are cases in Data Structure 3 where there is one val flag present in one row and in the adjacent next row, there is no val flag but instead it is blank. Yet both are valid data. 
+
+**************
+Chinmay has now resumed working on Air Pollution and has been added to the GitHub Repository. 
+**************
+
+We can graph things using Kepler.gl , for instance,
+graph hourly data averages of "clean" data 

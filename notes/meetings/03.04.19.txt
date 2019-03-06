@@ -17,3 +17,10 @@ Documentation will be kept in the same directory as the file being explained.
 Other than note taking, we agreed that the reason we were doing the null exploration is as a step towards spatial data interpolation. 
 Two scripts were successfully executed, those being view-nulls for hourly nulls and restrict-hours for hourly averages. 
 The output of view nulls is currently in descriptive-output/exploration/not_all_null.csv but may be moved in the future. The 
+
+The goals for next individual meeting on 03.05.19 are (from last week's notes on Slack):
+1. See, for each column in data we care about, which sites have null values across entire columns; this will tell us if perhaps there are sites with sensors that are completely down for certain measurements at certain times or across the entire year (2000).
+2. Reformat data structure 3 data into hourly averages, dropping averages with less than 75% of rows present in a given hour, replace nans with avgs or skip entirely.
+-> This may be the cause of the failure of my recent code which found that there were only 2 sites with a day's worth of data each. This code took data with pre-dropped rows from ds3, with five minute intervals.
+3. Apply the 75% threshold to the ground truth data collection script to drop any days with less than 75% of the hours represented
+4. Finally, run some models for interpolation
