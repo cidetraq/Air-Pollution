@@ -1,0 +1,9 @@
+Since last time: 
+
+(This documentation not found elsewhere)
+Running linear regression and random forest models on generated hourly average data for 2000 that used Chinmays' 71 sites resulted in:
+Linear Regression R^2 score: .04
+Random Forest, 10 estimators: .42
+Random Forest, 1000 estimators: .48
+
+This was after replacing AQS_Code with latitude and longitude in that hourly average data. 
