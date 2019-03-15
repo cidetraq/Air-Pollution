@@ -54,9 +54,13 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None, fillnan: float
 
 
 def run_job(job: dict):
-    df = pd.read_csv(job['input_path'])
-    df = transform(df, job['year'], job['masknan'], job['fillnan'], job['sites'])
-    df.to_csv(job['output_path'])
+    for chunk in pd.read_csv(job['input_path'], chunksize=job['chunksize']):
+        df = transform(chunk, job['year'], job['masknan'], job['fillnan'], job['sites'])
+
+        if not os.path.exists(job['output_path']):
+            df.to_csv(job['output_path'])
+        else:
+            df.to_csv(job['output_path'], mode='a', header=False)
 
 
 @plac.annotations(
@@ -69,7 +73,7 @@ def run_job(job: dict):
     masknan=("Mask nan rows instead of dropping them", "option", "M", float),
     fillnan=("Mask nan rows instead of dropping them", "option", "F", float),
     houston=("Only run for Houston sites", "option", "H", bool),
-
+    chunksize=("Process this many records at one time", "option", 'C', int)
 )
 def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3',
          input_prefix: str = "Data_",
@@ -79,7 +83,8 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
          year_end: int = 2018,
          masknan: float = None,
          fillnan: float = None,
-         houston: bool = True):
+         houston: bool = True,
+         chunksize: int = 200000):
 
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
@@ -101,7 +106,8 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
             job = {'cmd': 'transform', 'year': year, 'masknan': masknan,
                    'fillnan': fillnan, 'sites': [],
                    'input_path': os.path.join(input_path, input_name),
-                   'output_path': os.path.join(output_path, transform_name)}
+                   'output_path': os.path.join(output_path, transform_name),
+                   'chunksize': chunksize}
 
             if houston:
                 job['sites'] = HOUSTON
@@ -138,7 +144,7 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
                 sys.stdout.flush()
 
                 run_job(job)
-                
+
                 print("Finished job: %s" % job['year'])
                 sys.stdout.flush()
 
