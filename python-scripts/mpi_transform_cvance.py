@@ -56,13 +56,17 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None, fillnan: float
 
 
 def run_job(job: dict):
+    chunk_idx = 0
+
     for chunk in pd.read_csv(job['input_path'], chunksize=job['chunksize'], low_memory=False):
         chunk = transform(chunk, job['year'], job['masknan'], job['fillnan'], job['sites'])
 
-        if not os.path.exists(job['output_path']):
+        if chunk_idx == 0:
             chunk.to_csv(job['output_path'])
         else:
             chunk.to_csv(job['output_path'], mode='a', header=False)
+
+        chunk_idx += 1
 
 
 @plac.annotations(
