@@ -5,29 +5,27 @@ import plac
 import os
 import sys
 
-HOUSTON = ['48_201_0051', '48_201_0558', '48_201_0572', '48_201_0551', '48_201_6000', '48_201_0669', '48_201_0695', '48_201_0307', '48_201_0670', '48_201_0673', '48_201_0671', '48_201_0069', '48_201_1035', '48_201_0057', '48_201_1049', '48_201_0803', '48_201_1034', '48_201_1052', '48_201_0024']
+HOUSTON = ['48_201_0051', '48_201_0558', '48_201_0572',
+           '48_201_0551', '48_201_6000', '48_201_0669',
+           '48_201_0695', '48_201_0307', '48_201_0670',
+           '48_201_0673', '48_201_0671', '48_201_0069',
+           '48_201_1035', '48_201_0057', '48_201_1049',
+           '48_201_0803', '48_201_1034', '48_201_1052',
+           '48_201_0024']
 
 def transform(df: pd.DataFrame, year: int, masknan: float = None, fillnan: float = None, sites = []) -> pd.DataFrame:
 
     if len(sites) > 0:
-        df.drop(df[df['AQS_Code'].isin(sites)].index, inplace=True)
+        df.drop(df[~df['AQS_Code'].isin(sites)].index, inplace=True)
 
     if masknan is None and fillnan is None:
 
         if year < 2014:
-            df = df[df['nox_flag'] == 'VAL']
-            df = df[df['no_flag'] == 'VAL']
-            df = df[df['no2_flag'] == 'VAL']
-            df = df[df['o3_flag'] == "VAL"]
-            df = df[df['temp_flag'] == "VAL"]
+            val = 'VAL'
         if year >= 2014:
-            df = df[df['nox_flag'] == 'K']
-            df = df[df['no_flag'] == 'K']
-            df = df[df['o3_flag'] == 'K']
-            df = df[df['temp_flag'] == 'K']
+            val = 'K'
 
-        df = df[~df['winddir'].isna()]
-        df = df[~df['AQS_Code'].isna()]
+        df.drop(df[df['nox_flag'] != val | df['no_flag'] != val | df['no2_flag'] != val | df['o3_flag'] != val | df['temp_flag'] != val].index, inplace=True)
 
         df.drop(
             ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
@@ -149,7 +147,7 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
 
             print("%d jobs left." % (len(jobs) + outstanding_jobs))
             sys.stdout.flush()
-            
+
         # Clean up
         for nproc in range(1, n_procs):
             req = comm.isend({'cmd': 'shutdown'}, nproc, tag=1)
