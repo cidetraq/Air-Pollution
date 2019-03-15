@@ -3,78 +3,70 @@ import numpy as np
 from mpi4py import MPI
 import plac
 import os
+import sys
 
+HOUSTON = ['48_201_0051', '48_201_0558', '48_201_0572', '48_201_0551', '48_201_6000', '48_201_0669', '48_201_0695', '48_201_0307', '48_201_0670', '48_201_0673', '48_201_0671', '48_201_0069', '48_201_1035', '48_201_0057', '48_201_1049', '48_201_0803', '48_201_1034', '48_201_1052', '48_201_0024']
 
-def transform(region: str, df: pd.DataFrame, year: int, masknan: float = None) -> pd.DataFrame:
-    if masknan is None:
-        if region!='houston':
-        
-            if year < 2014:
-                df = df[df['nox_flag'] == 'VAL']
-                df = df[df['no_flag'] == 'VAL']
-                df = df[df['no2_flag'] == 'VAL']
-                df = df[df['o3_flag'] == "VAL"]
-                df = df[df['temp_flag'] == "VAL"]
-            if year >= 2014:
-                df = df[df['nox_flag'] == 'K']
-                df = df[df['no_flag'] == 'K']
-                df = df[df['o3_flag'] == 'K']
-                df = df[df['temp_flag'] == 'K']
+def transform(df: pd.DataFrame, year: int, masknan: float = None, fillnan: float = None, sites = []) -> pd.DataFrame:
 
-            df = df[~df['winddir'].isna()]
-            df = df[~df['AQS_Code'].isna()]
+    if len(sites) > 0:
+        df.drop(df[df['AQS_Code'].isin(sites)].index, inplace=True)
 
-            df = df.drop(
-                ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
-                 'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
-                 'temp_flag', 'Longitude', 'Latitude'], axis=1)
+    if masknan is None and fillnan is None:
 
-            df = df.dropna()
-        else:
-            greater_houston_ids=[481570696, 480391004,]
-            global houston_ids
-            houston_ids=[482010051,482010558,482010572,482010551,482016000,482010669,482010695,482010307,482010670,482010673,482010671,482010069,482011035,482010057,482011049,482010803,482011034,482011052,482010024]
-            houston_ids=format_AQS(houston_ids)
-            houston_df=df
-            houston_df['houston_site']=houston_df['AQS_Code'].apply(houston_site)
-            df=houston_df[houston_df['houston_site']=='hou']
-            df=df.drop(['houston_site'], axis=1)
+        if year < 2014:
+            df = df[df['nox_flag'] == 'VAL']
+            df = df[df['no_flag'] == 'VAL']
+            df = df[df['no2_flag'] == 'VAL']
+            df = df[df['o3_flag'] == "VAL"]
+            df = df[df['temp_flag'] == "VAL"]
+        if year >= 2014:
+            df = df[df['nox_flag'] == 'K']
+            df = df[df['no_flag'] == 'K']
+            df = df[df['o3_flag'] == 'K']
+            df = df[df['temp_flag'] == 'K']
+
+        df = df[~df['winddir'].isna()]
+        df = df[~df['AQS_Code'].isna()]
+
+        df.drop(
+            ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
+             'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
+             'temp_flag', 'Longitude', 'Latitude'], inplace=True, axis=1)
+
+        df.dropna(inplace=True)
+
     df['wind_x_dir'] = df['windspd'] * np.cos(df['winddir'] * (np.pi / 180))
     df['wind_y_dir'] = df['windspd'] * np.sin(df['winddir'] * (np.pi / 180))
     df['hour'] = pd.to_datetime(df['epoch'], unit='s').dt.hour
     df['day_of_year'] = pd.Series(pd.to_datetime(df['epoch'], unit='s'))
     df['day_of_year'] = df['day_of_year'].dt.dayofyear
-    
 
-    if masknan is not None:
-        df[df.isna()] = np.nan
-        
-    df = df.drop(
+    if masknan is not None or fillnan is not None:
+        df.drop(
             ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
              'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
-             'temp_flag'], axis=1)    
+             'temp_flag', 'Longitude', 'Latitude'], inplace=True, axis=1)
+    if masknan is not None:
+        df[df.isna()] = np.nan
+    elif fillnan is not None:
+        df.fillna(fillnan, inplace=True)
+
     return df
 
-def houston_site(code):
-    if code in houston_ids:
-        return 'hou'
-    else:
-        return 'not'
-    
-def format_AQS(ids):
-    new_ids=[]
-    for hou in ids: 
-        hou=list(str(hou))
-        hou.insert(2, '_')
-        hou.insert(6, '_')
-        hou="".join(hou)
-        new_ids.append(hou)
-    return new_ids
 
 def run_job(job: dict):
-    df = pd.read_csv(job['input_path'])
-    df = transform(job['region'], df, job['year'], job['masknan'])
-    df.to_csv(job['output_path'], index=False)
+    chunk_idx = 0
+
+    for chunk in pd.read_csv(job['input_path'], chunksize=job['chunksize'], low_memory=False):
+        chunk = transform(chunk, job['year'], job['masknan'], job['fillnan'], job['sites'])
+
+        if chunk_idx == 0:
+            chunk.to_csv(job['output_path'])
+        else:
+            chunk.to_csv(job['output_path'], mode='a', header=False)
+
+        chunk_idx += 1
 
 
 @plac.annotations(
@@ -85,7 +77,9 @@ def run_job(job: dict):
     year_begin=("First year to process", "option", "b", int),
     year_end=("Year to stop with", "option", "e", int),
     masknan=("Mask nan rows instead of dropping them", "option", "M", float),
-    region=('Region of Texas. Default: houston', 'option', "r", str)
+    fillnan=("Mask nan rows instead of dropping them", "option", "F", float),
+    houston=("Only run for Houston sites", "option", "H", bool),
+    chunksize=("Process this many records at one time", "option", 'C', int)
 )
 def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3',
          input_prefix: str = "Data_",
@@ -94,49 +88,47 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
          year_begin: int = 2000,
          year_end: int = 2018,
          masknan: float = None,
-         region: str= "houston"):
+         fillnan: float = None,
+         houston: bool = True,
+         chunksize: int = 200000):
 
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     n_procs = comm.Get_size()
 
+    print("rank: %d n_procs: %d" % (rank, n_procs))
+    sys.stdout.flush()
+
     if rank == 0:
 
-        n_proc = 0
+        n_proc = 1
         n_jobs = 0
 
-        my_jobs = []
         for year_idx, year in enumerate(range(year_begin, year_end)):
 
             input_name = "%s%d%s.csv" % (input_prefix, year, input_suffix)
             transform_name = 'Transformed_' + input_name
 
             job = {'cmd': 'transform', 'year': year, 'masknan': masknan,
+                   'fillnan': fillnan, 'sites': [],
                    'input_path': os.path.join(input_path, input_name),
-                   'output_path': os.path.join(output_path, transform_name), 'region': region}
+                   'output_path': os.path.join(output_path, transform_name),
+                   'chunksize': chunksize}
 
-            if n_proc != 0:
-                comm.isend(job, dest=n_proc, tag=1)
-            else:
-                my_jobs.append(job)
+            if houston:
+                job['sites'] = HOUSTON
 
-            n_jobs += 1
+            comm.isend(job, dest=n_proc, tag=1)
+
             n_proc += 1
+            n_jobs += 1
 
             if n_proc == n_procs:
-                n_proc = 0
+                n_proc = 1
 
         jobs_done = 0
 
-        for job in my_jobs:
-            print("Got job: %s" % job['year'])
-            run_job(job)
-            print("Finished job: %s" % job['year'])
-
-            jobs_done += 1
-
         while jobs_done < n_jobs:
-
             req = comm.irecv(tag=2)
             data = req.wait()
             jobs_done += 1
@@ -155,8 +147,12 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
             if job['cmd'] == 'transform':
 
                 print("Got job: %s" % job['year'])
+                sys.stdout.flush()
+
                 run_job(job)
+
                 print("Finished job: %s" % job['year'])
+                sys.stdout.flush()
 
                 result = {'year': job['year']}
                 req = comm.isend(result, dest=0, tag=2)
@@ -164,6 +160,7 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
 
             elif job['cmd'] == 'shutdown':
                 print("Node %d shutting down." % rank)
+                sys.stdout.flush()
                 return
 
 
