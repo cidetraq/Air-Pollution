@@ -8,7 +8,9 @@ import sys
 HOUSTON = ['48_201_0051', '48_201_0558', '48_201_0572', '48_201_0551', '48_201_6000', '48_201_0669', '48_201_0695', '48_201_0307', '48_201_0670', '48_201_0673', '48_201_0671', '48_201_0069', '48_201_1035', '48_201_0057', '48_201_1049', '48_201_0803', '48_201_1034', '48_201_1052', '48_201_0024']
 
 def transform(df: pd.DataFrame, year: int, masknan: float = None, fillnan: float = None, sites = []) -> pd.DataFrame:
-    df = df[df['AQS_Code'].isin(sites)]
+
+    if len(sites) > 0:
+        df.drop(df[df['AQS_Code'].isin(sites)].index, inplace=True)
 
     if masknan is None and fillnan is None:
 
@@ -27,12 +29,12 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None, fillnan: float
         df = df[~df['winddir'].isna()]
         df = df[~df['AQS_Code'].isna()]
 
-        df = df.drop(
+        df.drop(
             ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
              'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
-             'temp_flag', 'Longitude', 'Latitude'], axis=1)
+             'temp_flag', 'Longitude', 'Latitude'], inplace=True, axis=1)
 
-        df = df.dropna()
+        df.dropna(inplace=True)
 
     df['wind_x_dir'] = df['windspd'] * np.cos(df['winddir'] * (np.pi / 180))
     df['wind_y_dir'] = df['windspd'] * np.sin(df['winddir'] * (np.pi / 180))
@@ -41,26 +43,26 @@ def transform(df: pd.DataFrame, year: int, masknan: float = None, fillnan: float
     df['day_of_year'] = df['day_of_year'].dt.dayofyear
 
     if masknan is not None or fillnan is not None:
-        df = df.drop(
+        df.drop(
             ['co_flag', 'humid', 'humid_flag', 'pm25', 'pm25_flag', 'so2', 'so2_flag', 'solar', 'solar_flag', 'dew',
              'dew_flag', 'redraw', 'co', 'no_flag', 'no2_flag', 'nox_flag', 'o3_flag', 'winddir_flag', 'windspd_flag',
-             'temp_flag', 'Longitude', 'Latitude'], axis=1)
+             'temp_flag', 'Longitude', 'Latitude'], inplace=True, axis=1)
     if masknan is not None:
         df[df.isna()] = np.nan
     elif fillnan is not None:
-        df = df.fillna(fillnan)
+        df.fillna(fillnan, inplace=True)
 
     return df
 
 
 def run_job(job: dict):
-    for chunk in pd.read_csv(job['input_path'], chunksize=job['chunksize']):
-        df = transform(chunk, job['year'], job['masknan'], job['fillnan'], job['sites'])
+    for chunk in pd.read_csv(job['input_path'], chunksize=job['chunksize'], low_memory=False):
+        chunk = transform(chunk, job['year'], job['masknan'], job['fillnan'], job['sites'])
 
         if not os.path.exists(job['output_path']):
-            df.to_csv(job['output_path'])
+            chunk.to_csv(job['output_path'])
         else:
-            df.to_csv(job['output_path'], mode='a', header=False)
+            chunk.to_csv(job['output_path'], mode='a', header=False)
 
 
 @plac.annotations(
