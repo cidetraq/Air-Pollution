@@ -92,17 +92,20 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
          houston: bool = True,
          chunksize: int = 200000):
 
+    if masknan is not None and fillnan is not None:
+        sys.exit("Error: fillnan and masknan cannot both be set.")
+
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     n_procs = comm.Get_size()
 
-    print("rank: %d n_procs: %d" % (rank, n_procs))
+    print("(mpi4py) rank: %d n_procs: %d" % (rank, n_procs))
     sys.stdout.flush()
 
     if rank == 0:
 
-        n_proc = 1
-        n_jobs = 0
+        # Create jobs
+        jobs = []
 
         for year_idx, year in enumerate(range(year_begin, year_end)):
 
@@ -118,20 +121,34 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
             if houston:
                 job['sites'] = HOUSTON
 
-            comm.isend(job, dest=n_proc, tag=1)
+            jobs.append(job)
+
+        outstanding_jobs = 0
+        n_proc = 1
+
+        # One full round robin
+        while len(jobs) > 0:
+            comm.isend(jobs.pop(), dest=n_proc, tag=1)
 
             n_proc += 1
-            n_jobs += 1
+            outstanding_jobs += 1
 
             if n_proc == n_procs:
-                n_proc = 1
+                break
 
         jobs_done = 0
-
-        while jobs_done < n_jobs:
+        while outstanding_jobs > 0:
             req = comm.irecv(tag=2)
             data = req.wait()
-            jobs_done += 1
+
+            outstanding_jobs -= 1
+
+            print("%d jobs left." % len(jobs))
+            sys.stdout.flush()
+
+            if len(jobs) > 0:
+                comm.isend(jobs.pop(), dest=data['rank'], tag=1)
+                outstanding_jobs += 1
 
         for nproc in range(1, n_procs):
             req = comm.isend({'cmd': 'shutdown'}, nproc, tag=1)
@@ -154,7 +171,7 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
                 print("Finished job: %s" % job['year'])
                 sys.stdout.flush()
 
-                result = {'year': job['year']}
+                result = {'year': job['year'], 'rank': rank}
                 req = comm.isend(result, dest=0, tag=2)
                 req.wait()
 
