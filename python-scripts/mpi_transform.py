@@ -126,7 +126,7 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
         outstanding_jobs = 0
         n_proc = 1
 
-        # One full round robin
+        # Distribute optimizene full round robin of jobs
         while len(jobs) > 0:
             comm.isend(jobs.pop(), dest=n_proc, tag=1)
 
@@ -136,20 +136,21 @@ def main(input_path: str = '/project/lindner/moving/summer2018/Data_structure_3'
             if n_proc == n_procs:
                 break
 
-        jobs_done = 0
+        # Distribute more jobs as workers become free
         while outstanding_jobs > 0:
             req = comm.irecv(tag=2)
             data = req.wait()
 
             outstanding_jobs -= 1
 
-            print("%d jobs left." % len(jobs))
-            sys.stdout.flush()
-
             if len(jobs) > 0:
                 comm.isend(jobs.pop(), dest=data['rank'], tag=1)
                 outstanding_jobs += 1
 
+            print("%d jobs left." % (len(jobs) + outstanding_jobs))
+            sys.stdout.flush()
+            
+        # Clean up
         for nproc in range(1, n_procs):
             req = comm.isend({'cmd': 'shutdown'}, nproc, tag=1)
             req.wait()
