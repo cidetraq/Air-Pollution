@@ -61,6 +61,10 @@ def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bo
 
         df.dropna(inplace=True)
 
+    # Convert AQS_Code to numerical representation
+    df['AQS_Code'].str.replace('_', '')
+    df['AQS_Code'] = df['AQS_Code'].astype(int)
+
     df['wind_x_dir'] = df['windspd'] * np.cos(df['winddir'] * (np.pi / 180))
     df['wind_y_dir'] = df['windspd'] * np.sin(df['winddir'] * (np.pi / 180))
     df['hour'] = pd.to_datetime(df['epoch'], unit='s').dt.hour
@@ -68,7 +72,7 @@ def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bo
     df['day_of_year'] = df['day_of_year'].dt.dayofyear
 
     if masknan is not None:
-        df[df.isna()] = np.nan
+        df[df.isnull().any(axis=1)] = masknan
     elif fillnan is not None:
         df.fillna(fillnan, inplace=True)
 
@@ -99,9 +103,9 @@ def run_job(job: dict):
 
 
 @plac.annotations(
-    input_path=("Path containing the data files to ingest", "option", "P", str),
-    input_prefix=("{$prefix}year.csv", "option", "p", str),
-    input_suffix=("year{$suffix}.csv", "option", "s", str),
+    input_path=("Path containing the data files to ingest", "option", "p", str),
+    input_prefix=("{$prefix}year.csv", "option", "P", str),
+    input_suffix=("year{$suffix}.csv", "option", "S", str),
     output_path=("Path to write the resulting numpy sequences / transform cache", "option", "o", str),
     year_begin=("First year to process", "option", "b", int),
     year_end=("Year to stop with", "option", "e", int),
