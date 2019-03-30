@@ -72,7 +72,9 @@ def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bo
     df['day_of_year'] = df['day_of_year'].dt.dayofyear
 
     if masknan is not None:
-        df[df.isnull().any(axis=1)] = masknan
+        s = df['AQS_Code']
+        df[df.isnull().any(axis=1)] = 1000
+        df['AQS_Code'] = s
     elif fillnan is not None:
         df.fillna(fillnan, inplace=True)
 
