@@ -25,7 +25,7 @@ HOUSTON = {'48_201_0051': {'Longitude': -95.474167, 'Latitude': 29.623889},
            '48_201_1052': {'Longitude': -95.38769, 'Latitude': 29.81453},
            '48_201_0024': {'Longitude': -95.3261373, 'Latitude': 29.9010364}}
 
-def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bool = False, dropnan: bool = False, masknan: float = None, fillnan: float = None, sites = []) -> pd.DataFrame:
+def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bool = False, dropnan: bool = False, masknan: float = None, fillnan: float = None, aqsnumerical: bool = False, sites = []) -> pd.DataFrame:
 
     if len(sites) > 0:
         df.drop(df[~df['AQS_Code'].isin(list(sites.keys()))].index, inplace=True)
@@ -61,9 +61,9 @@ def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bo
 
         df.dropna(inplace=True)
 
-    # Convert AQS_Code to numerical representation
-    df['AQS_Code'].str.replace('_', '')
-    df['AQS_Code'] = df['AQS_Code'].astype(int)
+    if aqsnumerical:
+        df['AQS_Code'].str.replace('_', '')
+        df['AQS_Code'] = df['AQS_Code'].astype(int)
 
     df['wind_x_dir'] = df['windspd'] * np.cos(df['winddir'] * (np.pi / 180))
     df['wind_y_dir'] = df['windspd'] * np.sin(df['winddir'] * (np.pi / 180))
@@ -94,6 +94,7 @@ def run_job(job: dict):
                               dropnan=job['dropnan'],
                               masknan=job['masknan'],
                               fillnan=job['fillnan'],
+                              aqsnumerical=job['aqsnumerical'],
                               sites=job['sites'])
 
             if chunk_idx == 0:
@@ -116,6 +117,7 @@ def run_job(job: dict):
     dropnan=("Drop nan rows", "flag", "D"),
     masknan=("Mask nan rows", "option", "M", float),
     fillnan=("Fill nan rows", "option", "F", float),
+    aqsnumerical=("Convert AQS code to numerical", "flag", "A"),
     houston=("Only run for Houston sites", "flag", "H"),
     chunksize=("Process this many records at one time", "option", 'C', int)
 )
@@ -130,6 +132,7 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data',
          dropnan: bool = False,
          masknan: float = None,
          fillnan: float = None,
+         aqsnumerical: bool = False,
          houston: bool = False,
          chunksize: int = 200000):
 
@@ -161,6 +164,7 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data',
                    'masknan': masknan,
                    'fillnan': fillnan,
                    'sites': [],
+                   'aqsnumerical': aqsnumerical,
                    'input_path': os.path.join(input_path, input_name),
                    'output_path': os.path.join(output_path, transform_name),
                    'chunksize': chunksize}
