@@ -56,9 +56,6 @@ def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bo
         if year >= 2014:
             val = 'K'
 
-        df.drop(df[df['nox_flag'] != val | df['no_flag'] != val | df['no2_flag'] != val | df['o3_flag'] != val | df['temp_flag'] != val].index, inplace=True)
-        df.drop(remove_cols, inplace=True, axis=1)
-
         df.dropna(inplace=True)
 
     if aqsnumerical:
