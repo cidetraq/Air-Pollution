@@ -1,18 +1,16 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # In[3]:
 
 
 import pandas as pd
 import numpy as np
-#from mpi4py import MPI
-#import plac
+from mpi4py import MPI
+import plac
 import os
 import sys
 
+file = open("/project/lindner/air-pollution/current/2019/descriptive-output/mpi_transform_bysite_messages.txt", "a")
 HOUSTON = {'48_201_0051': {'Longitude': -95.474167, 'Latitude': 29.623889},
-           '48_201_0558': {'Longitude': -95.3536111, 'Latitude': 29.5894444},
+           '48_201_0558': {'Longitutde': -95.3536111, 'Latitude': 29.5894444},
            '48_201_0572': {'Longitude': -95.105, 'Latitude': 29.583333},
            '48_201_0551': {'Longitude': -95.1602778, 'Latitude': 29.8586111},
            '48_201_6000': {'Longitude': -95.2535982, 'Latitude': 29.6843603},
@@ -56,6 +54,7 @@ def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bo
     # This is probobly not needed anymore after changes Data_structure_3 (level3_data)
     if fillgps:
         unique = df['AQS_Code'].unique()
+        # Ensuring Houston lat long are correct
         for site in HOUSTON:
             if site in unique:
                 df[df['AQS_Code'] == site]['Longitude'] = HOUSTON[site]['Longitude']
@@ -109,8 +108,11 @@ def run_job(job: dict):
                 chunk.to_csv(job['output_path'])
             else:
                 chunk.to_csv(job['output_path'], mode='a', header=False)
-
+            print("Saved job "+str(job[year])+"_"+str(job[sites][0])+" chunk_idx: "+chunk_idx+" to disk.")
+            file.write("Saved job "+str(job[year])+"_"+str(job[sites][0])+" chunk_idx: "+chunk_idx+" to disk." +"\n")
+            #file.write("\n")
             chunk_idx += 1
+        return
 
 
 @plac.annotations(
@@ -129,7 +131,7 @@ def run_job(job: dict):
     houston=("Only run for Houston sites", "flag", "H"),
     chunksize=("Process this many records at one time", "option", 'C', int)
 )
-def main(input_path: str = '/project/lindner/air-pollution/level3_data',
+def main(input_path: str = '/project/lindner/air-pollution/level3_data/',
          input_prefix: str = "Data_",
          input_suffix: str = "",
          output_path: str = '/project/lindner/air-pollution/current/2019/data-formatted/houston',
@@ -152,40 +154,51 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data',
     n_procs = comm.Get_size()
 
     print("(mpi4py) rank: %d n_procs: %d" % (rank, n_procs))
+    file.write("(mpi4py) rank: %d n_procs: %d" % (rank, n_procs) +"\n")
+    #file.write("\n")
     sys.stdout.flush()
 
     if rank == 0:
-
+        
         # Create jobs
         jobs = []
 
-        for year_idx, year in enumerate(range(year_begin, year_end))
+        outstanding_jobs = 0
+        n_proc = 1
+        
+        for year_idx, year in enumerate(range(year_begin, year_end)):
             input_name = "%s%d%s.csv" % (input_prefix, year, input_suffix)
             df = pd.read_csv(input_path+input_name)
+            print("Read data "+input_path+input_name)
+            file.write("Read data "+input_path+input_name +"\n")
+            #file.write("\n")
+            sys.stdout.flush()
             unique_aqs = df['AQS_Code'].unique()
             for aqs in unique_aqs:
-                transform_name = 'Transformed_' + input_name+'_'+aqs
-                job = {'cmd': 'transform',
-                   'year': year,
-                   'dropnan': dropnan,
-                   'fillgps': fillgps,
-                   'naninvalid': naninvalid,
-                   'masknan': masknan,
-                   'fillnan': fillnan,
-                   'sites': [aqs],
-                   'aqsnumerical': aqsnumerical,
-                   'input_path': os.path.join(input_path, input_name),
-                   'output_path': os.path.join(output_path, transform_name),
-                   'chunksize': chunksize}
+                if type(aqs) != float:
+                    transform_name = 'Transformed_' + input_name+'_'+aqs
+                    job = {'cmd': 'transform',
+                       'year': year,
+                       'dropnan': dropnan,
+                       'fillgps': fillgps,
+                       'naninvalid': naninvalid,
+                       'masknan': masknan,
+                       'fillnan': fillnan,
+                       'sites': [aqs],
+                       'aqsnumerical': aqsnumerical,
+                       'input_path': os.path.join(input_path, input_name),
+                       'output_path': os.path.join(output_path, transform_name),
+                       'chunksize': chunksize}
 
-                if houston:
-                    job['sites'] = HOUSTON
+                    if houston:
+                        job['sites'] = HOUSTON
 
 
-                jobs.append(job)
-
-                outstanding_jobs = 0
-                n_proc = 1
+                    jobs.append(job)
+                    print("Appended new job")
+                    file.write("Appended new job "+aqs +"\n")
+                    #file.write("\n")
+                    sys.stdout.flush()
 
         # Distribute one full round robin of jobs
         while len(jobs) > 0:
@@ -209,6 +222,7 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data',
                 outstanding_jobs += 1
 
             print("%d jobs left." % (len(jobs) + outstanding_jobs))
+            file.write("%d jobs left." % (len(jobs) + outstanding_jobs +"\n"))
             sys.stdout.flush()
 
         # Clean up
@@ -217,6 +231,9 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data',
             req.wait()
 
         print("Node %d shutting down." % rank)
+        file.write("Node %d shutting down." % rank +"\n")
+        #file.write("\n")
+        sys.stdout.flush()
 
     else:
         while True:
@@ -226,11 +243,15 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data',
             if job['cmd'] == 'transform':
 
                 print("Got job: %s" % job['year'])
+                file.write("Got job: %s" % job['year'] +"\n")
+                #file.write("\n")
                 sys.stdout.flush()
 
                 run_job(job)
 
                 print("Finished job: %s" % job['year'])
+                file.write("Finished job: %s" % job['year'] +"\n")
+                #file.write("\n")
                 sys.stdout.flush()
 
                 result = {'year': job['year'], 'rank': rank}
@@ -239,6 +260,8 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data',
 
             elif job['cmd'] == 'shutdown':
                 print("Node %d shutting down." % rank)
+                file.write("Node %d shutting down." % rank +"\n")
+                #file.write("\n")
                 sys.stdout.flush()
                 return
 
@@ -246,7 +269,7 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data',
 if __name__ == '__main__':
     plac.call(main)
 
-
+file.close()
 # In[ ]:
 
 
