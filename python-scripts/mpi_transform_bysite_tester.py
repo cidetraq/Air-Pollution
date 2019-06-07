@@ -8,7 +8,7 @@ import plac
 import os
 import sys
 
-file = open("/project/lindner/air-pollution/current/2019/descriptive-output/mpi_transform_bysite_messages.txt", "a")
+file = open("/project/lindner/air-pollution/current/2019/descriptive-output/mpi_transform_bysite_messages.txt", "w")
 HOUSTON = {'48_201_0051': {'Longitude': -95.474167, 'Latitude': 29.623889},
            '48_201_0558': {'Longitutde': -95.3536111, 'Latitude': 29.5894444},
            '48_201_0572': {'Longitude': -95.105, 'Latitude': 29.583333},
@@ -37,7 +37,7 @@ def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bo
 
     if len(sites) > 0:
         #drop all sites other than the one requested
-        df.drop(df[~df['AQS_Code'].isin(list(sites.keys()))].index, inplace=True)
+        df.drop(df[~df['AQS_Code'].isin(list(sites))].index, inplace=True)
 
     # This is probobly not needed anymore after changes Data_structure_3 (level3_data)
     if naninvalid:
@@ -105,11 +105,11 @@ def run_job(job: dict):
                               sites=job['sites'])
 
             if chunk_idx == 0:
-                chunk.to_csv(job['output_path'])
+                chunk.to_csv(job['output_path'], index=False)
             else:
-                chunk.to_csv(job['output_path'], mode='a', header=False)
-            print("Saved job "+str(job[year])+"_"+str(job[sites][0])+" chunk_idx: "+chunk_idx+" to disk.")
-            file.write("Saved job "+str(job[year])+"_"+str(job[sites][0])+" chunk_idx: "+chunk_idx+" to disk." +"\n")
+                chunk.to_csv(job['output_path'], mode='a', header=False, index=False)
+            print("Saved job "+str(job['year'])+"_"+str(job['sites'][0])+" chunk_idx: "+str(chunk_idx)+" to disk.")
+            file.write("Saved job "+str(job['year'])+"_"+str(job['sites'][0])+" chunk_idx: "+str(chunk_idx)+" to disk." +"\n")
             file.flush()
             #file.write("\n")
             chunk_idx += 1
@@ -168,9 +168,9 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data/',
         outstanding_jobs = 0
         n_proc = 1
         
-        for year_idx, year in enumerate(range(year_begin, year_end)):
-            input_name = "%s%d%s.csv" % (input_prefix, year, input_suffix)
-            df = pd.read_csv(input_path+input_name)
+        for year_idx, year in enumerate(range(2000,2001)):
+            input_name = "data00_100000.csv"
+            df = pd.read_csv(input_path+input_name, nrows)
             print("Read data "+input_path+input_name)
             file.write("Read data "+input_path+input_name +"\n")
             file.flush()
@@ -224,9 +224,11 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data/',
             if len(jobs) > 0:
                 comm.isend(jobs.pop(), dest=data['rank'], tag=1)
                 outstanding_jobs += 1
-
-            print("%d jobs left." % (len(jobs) + outstanding_jobs))
-            file.write("%d jobs left." % (len(jobs) + outstanding_jobs +"\n"))
+            
+            #print("Len jobs: "+len(jobs))
+            #print("Type of jobs: "+type(jobs))
+            #print("%d jobs left." % ((len(jobs) + outstanding_jobs))
+            #file.write("%d jobs left." % (str(len(jobs) + outstanding_jobs)+"\n"))
             sys.stdout.flush()
 
         # Clean up

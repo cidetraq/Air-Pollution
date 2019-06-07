@@ -1,0 +1,1 @@
+mpirun -np 20 python3.6 python-scripts/mpi_transform_bysite_tester.py --input-path="/home/narandal/" --output-path="data-formatted/mpi-test/"
