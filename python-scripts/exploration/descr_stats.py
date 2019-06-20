@@ -11,6 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pandas.api.types import is_numeric_dtype
 import plac
+import sys
 
 # apply the datetime operations
 # 
@@ -69,18 +70,20 @@ def analyze(df_dict, year, output_path):
             try:
                 cleaned[col].dropna().plot.kde(ax=ax, legend=False, title=col, xlim= (0,find_xlim(cleaned[col])))
             except BaseException:
-                pass
-            #cleaned[col].plot.hist(density=True, ax=ax)
+                pass           
+            if col != 'Latitude' and col != "Longitude":
+                cleaned[col].plot.hist(density=True, ax=ax, range = (0, find_xlim(cleaned[col])) )
+            plt.xlim(left = 0, right =find_xlim(cleaned[col]))
+            plt.savefig(output_path+year+'-'+df_name+'-'+col+"-density.png")
+            plt.clf()
+            #
             col_arr = np.array(cleaned[col].dropna())
-            #why is the below code not running on the correct columns... or at all
             if col != 'Latitude' and col != "Longitude":
                 (n, bins, patches) = plt.hist(col_arr, range = (0, find_xlim(cleaned[col])))
                 print("Number of elements in each bin for "+df_name+"_"+str(col)+": ")
                 print(n) 
-            plt.xlim(left = 0, right =find_xlim(cleaned[col]))
-            plt.savefig(output_path+year+'-'+df_name+'-'+col+"-density.png")
-            plt.clf()
-
+                sys.stdout.flush()
+                plt.clf()
 
 
 # <h2>Main
