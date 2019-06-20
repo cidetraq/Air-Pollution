@@ -1,0 +1,2 @@
+/var/spool/slurm/slurmd/job713410/slurm_script: line 16: 92964 Killed                  python3.6 python-scripts/exploration/descr_stats.py --input-path="/project/lindner/air-pollution/level2_data/" --output-path="$PROJECT/descriptive-output/descr-stats/"
+slurmstepd: error: Detected 1 oom-kill event(s) in step 713410.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.

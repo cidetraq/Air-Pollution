@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "python-scripts/exploration/descr_stats.py", line 131, in <module>
+    plac.call(main)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 328, in call
+    cmd, result = parser.consume(arglist)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 207, in consume
+    return cmd, self.func(*(args + varargs + extraopts), **kwargs)
+  File "python-scripts/exploration/descr_stats.py", line 120, in main
+    higho3_days = get_higho3_days(df)
+  File "python-scripts/exploration/descr_stats.py", line 38, in get_higho3_days
+    high_o3_days = df.iloc[high_o3[high_o3['day'] == True].index]
+NameError: name 'high_o3' is not defined

@@ -1,0 +1,5 @@
+usage: descr_stats.py [-h] [-p /project/lindner/air-pollution/level3_data/]
+                      [-P Data_] [-S]
+                      [-o /project/lindner/air-pollution/current/2019/descriptive-output/]
+                      [-b 2000] [-e 2018] [-A] [-H] [-C 200000]
+descr_stats.py: error: unrecognized arguments: -T=/home/narandal/data00_100000.csv

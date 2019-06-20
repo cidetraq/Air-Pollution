@@ -1,0 +1,4 @@
+  File "python-scripts/exploration/descr_stats.py", line 91
+    def main(input_path: str = '/project/lindner/air-pollution/level3_data/',
+            ^
+SyntaxError: non-default argument follows default argument

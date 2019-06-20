@@ -1,0 +1,124 @@
+(mpi4py) rank: 1 n_procs: 4
+(mpi4py) rank: 2 n_procs: 4
+(mpi4py) rank: 3 n_procs: 4
+(mpi4py) rank: 0 n_procs: 4
+Got job: 2016
+Got job: 2017
+Got job: 2015
+Traceback (most recent call last):
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/indexes/base.py", line 3078, in get_loc
+    return self._engine.get_loc(key)
+  File "pandas/_libs/index.pyx", line 140, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 162, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 1492, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 1500, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'nox_flag'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python-scripts/mpi_transform.py", line 184, in <module>
+    plac.call(main)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 328, in call
+    cmd, result = parser.consume(arglist)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 207, in consume
+    return cmd, self.func(*(args + varargs + extraopts), **kwargs)
+  File "python-scripts/mpi_transform.py", line 168, in main
+    run_job(job)
+  File "python-scripts/mpi_transform.py", line 60, in run_job
+    chunk = transform(chunk, job['year'], job['masknan'], job['fillnan'], job['sites'])
+  File "python-scripts/mpi_transform.py", line 28, in transform
+    df.drop(df[df['nox_flag'] != val | df['no_flag'] != val | df['no2_flag'] != val | df['o3_flag'] != val | df['temp_flag'] != val].index, inplace=True)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/frame.py", line 2688, in __getitem__
+    return self._getitem_column(key)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/frame.py", line 2695, in _getitem_column
+    return self._get_item_cache(key)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/generic.py", line 2489, in _get_item_cache
+    values = self._data.get(item)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/internals.py", line 4115, in get
+    loc = self.items.get_loc(item)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/indexes/base.py", line 3080, in get_loc
+    return self._engine.get_loc(self._maybe_cast_indexer(key))
+  File "pandas/_libs/index.pyx", line 140, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 162, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 1492, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 1500, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'nox_flag'
+Traceback (most recent call last):
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/indexes/base.py", line 3078, in get_loc
+    return self._engine.get_loc(key)
+  File "pandas/_libs/index.pyx", line 140, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 162, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 1492, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 1500, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'nox_flag'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python-scripts/mpi_transform.py", line 184, in <module>
+    plac.call(main)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 328, in call
+    cmd, result = parser.consume(arglist)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 207, in consume
+    return cmd, self.func(*(args + varargs + extraopts), **kwargs)
+  File "python-scripts/mpi_transform.py", line 168, in main
+    run_job(job)
+  File "python-scripts/mpi_transform.py", line 60, in run_job
+    chunk = transform(chunk, job['year'], job['masknan'], job['fillnan'], job['sites'])
+  File "python-scripts/mpi_transform.py", line 28, in transform
+    df.drop(df[df['nox_flag'] != val | df['no_flag'] != val | df['no2_flag'] != val | df['o3_flag'] != val | df['temp_flag'] != val].index, inplace=True)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/frame.py", line 2688, in __getitem__
+    return self._getitem_column(key)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/frame.py", line 2695, in _getitem_column
+    return self._get_item_cache(key)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/generic.py", line 2489, in _get_item_cache
+    values = self._data.get(item)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/internals.py", line 4115, in get
+    loc = self.items.get_loc(item)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/indexes/base.py", line 3080, in get_loc
+    return self._engine.get_loc(self._maybe_cast_indexer(key))
+  File "pandas/_libs/index.pyx", line 140, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 162, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 1492, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 1500, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'nox_flag'
+Traceback (most recent call last):
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/indexes/base.py", line 3078, in get_loc
+    return self._engine.get_loc(key)
+  File "pandas/_libs/index.pyx", line 140, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 162, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 1492, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 1500, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'nox_flag'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python-scripts/mpi_transform.py", line 184, in <module>
+    plac.call(main)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 328, in call
+    cmd, result = parser.consume(arglist)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 207, in consume
+    return cmd, self.func(*(args + varargs + extraopts), **kwargs)
+  File "python-scripts/mpi_transform.py", line 168, in main
+    run_job(job)
+  File "python-scripts/mpi_transform.py", line 60, in run_job
+    chunk = transform(chunk, job['year'], job['masknan'], job['fillnan'], job['sites'])
+  File "python-scripts/mpi_transform.py", line 28, in transform
+    df.drop(df[df['nox_flag'] != val | df['no_flag'] != val | df['no2_flag'] != val | df['o3_flag'] != val | df['temp_flag'] != val].index, inplace=True)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/frame.py", line 2688, in __getitem__
+    return self._getitem_column(key)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/frame.py", line 2695, in _getitem_column
+    return self._get_item_cache(key)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/generic.py", line 2489, in _get_item_cache
+    values = self._data.get(item)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/internals.py", line 4115, in get
+    loc = self.items.get_loc(item)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/indexes/base.py", line 3080, in get_loc
+    return self._engine.get_loc(self._maybe_cast_indexer(key))
+  File "pandas/_libs/index.pyx", line 140, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 162, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 1492, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 1500, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'nox_flag'

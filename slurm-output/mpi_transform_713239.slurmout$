@@ -1,0 +1,55 @@
+(mpi4py) rank: 1 n_procs: 4
+(mpi4py) rank: 2 n_procs: 4
+(mpi4py) rank: 0 n_procs: 4
+(mpi4py) rank: 3 n_procs: 4
+Got job: 2015
+Got job: 2017
+Got job: 2016
+Traceback (most recent call last):
+  File "python-scripts/mpi_transform.py", line 184, in <module>
+    plac.call(main)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 328, in call
+    cmd, result = parser.consume(arglist)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 207, in consume
+    return cmd, self.func(*(args + varargs + extraopts), **kwargs)
+  File "python-scripts/mpi_transform.py", line 168, in main
+    run_job(job)
+  File "python-scripts/mpi_transform.py", line 60, in run_job
+    chunk = transform(chunk, job['year'], job['masknan'], job['fillnan'], job['sites'])
+  File "python-scripts/mpi_transform.py", line 28, in transform
+    df.drop(df[df['nox_flag'] != val | df['no_flag'] != val | df['no2_flag'] != val | df['o3_flag'] != val | df['temp_flag'] != val].index, inplace=True)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/generic.py", line 1576, in __nonzero__
+    .format(self.__class__.__name__))
+ValueError: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
+Traceback (most recent call last):
+  File "python-scripts/mpi_transform.py", line 184, in <module>
+    plac.call(main)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 328, in call
+    cmd, result = parser.consume(arglist)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 207, in consume
+    return cmd, self.func(*(args + varargs + extraopts), **kwargs)
+  File "python-scripts/mpi_transform.py", line 168, in main
+    run_job(job)
+  File "python-scripts/mpi_transform.py", line 60, in run_job
+    chunk = transform(chunk, job['year'], job['masknan'], job['fillnan'], job['sites'])
+  File "python-scripts/mpi_transform.py", line 28, in transform
+    df.drop(df[df['nox_flag'] != val | df['no_flag'] != val | df['no2_flag'] != val | df['o3_flag'] != val | df['temp_flag'] != val].index, inplace=True)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/generic.py", line 1576, in __nonzero__
+    .format(self.__class__.__name__))
+ValueError: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
+Traceback (most recent call last):
+  File "python-scripts/mpi_transform.py", line 184, in <module>
+    plac.call(main)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 328, in call
+    cmd, result = parser.consume(arglist)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/plac_core.py", line 207, in consume
+    return cmd, self.func(*(args + varargs + extraopts), **kwargs)
+  File "python-scripts/mpi_transform.py", line 168, in main
+    run_job(job)
+  File "python-scripts/mpi_transform.py", line 60, in run_job
+    chunk = transform(chunk, job['year'], job['masknan'], job['fillnan'], job['sites'])
+  File "python-scripts/mpi_transform.py", line 28, in transform
+    df.drop(df[df['nox_flag'] != val | df['no_flag'] != val | df['no2_flag'] != val | df['o3_flag'] != val | df['temp_flag'] != val].index, inplace=True)
+  File "/project/cacds/apps/Anaconda3/python-3.6/lib/python3.6/site-packages/pandas/core/generic.py", line 1576, in __nonzero__
+    .format(self.__class__.__name__))
+ValueError: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().

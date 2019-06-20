@@ -1,0 +1,4 @@
+  File "python-scripts/exploration/descr_stats.py", line 72
+    plt.clf()
+      ^
+SyntaxError: invalid syntax

@@ -8,9 +8,14 @@ import plac
 import os
 import sys
 
-file = open("/project/lindner/air-pollution/current/2019/descriptive-output/mpi_transform_bysite_messages.txt", "a")
+#testing to see if opening a file object will cause print to work 
+
+file = open("/project/lindner/air-pollution/current/2019/descriptive-output/mpi_transform_bysite_messages.txt", "w")
+
+#Either that worked, or running sbatch from within the slurm-files directory was the right move
+
 HOUSTON = {'48_201_0051': {'Longitude': -95.474167, 'Latitude': 29.623889},
-           '48_201_0558': {'Longitutde': -95.3536111, 'Latitude': 29.5894444},
+           '48_201_0558': {'Longitude': -95.3536111, 'Latitude': 29.5894444},
            '48_201_0572': {'Longitude': -95.105, 'Latitude': 29.583333},
            '48_201_0551': {'Longitude': -95.1602778, 'Latitude': 29.8586111},
            '48_201_6000': {'Longitude': -95.2535982, 'Latitude': 29.6843603},
@@ -29,7 +34,6 @@ HOUSTON = {'48_201_0051': {'Longitude': -95.474167, 'Latitude': 29.623889},
            '48_201_1052': {'Longitude': -95.38769, 'Latitude': 29.81453},
            '48_201_0024': {'Longitude': -95.3261373, 'Latitude': 29.9010364}}
 
-print("Executed first")
 # In[ ]:
 
 
@@ -37,7 +41,7 @@ def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bo
 
     if len(sites) > 0:
         #drop all sites other than the one requested
-        df.drop(df[~df['AQS_Code'].isin(list(sites.keys()))].index, inplace=True)
+        df.drop(df[~df['AQS_Code'].isin(sites)].index, inplace=True)
 
     # This is probobly not needed anymore after changes Data_structure_3 (level3_data)
     if naninvalid:
@@ -66,8 +70,6 @@ def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bo
         if year >= 2014:
             val = 'K'
 
-        df.dropna(inplace=True)
-
     if aqsnumerical:
         df['AQS_Code'].str.replace('_', '')
         df['AQS_Code'] = df['AQS_Code'].astype(int)
@@ -94,7 +96,9 @@ def run_job(job: dict):
 
         chunk_idx = 0
 
-        for chunk in pd.read_csv(job['input_path'], chunksize=job['chunksize'], low_memory=False):
+        data = pd.read_csv(job['input_path'], chunksize=job['chunksize'], low_memory=False)
+        unique_AQS = data['AQS_Code'].unique()
+        for chunk in data:
             chunk = transform(chunk, year=job['year'],
                               fillgps=job['fillgps'],
                               naninvalid=job['naninvalid'],
@@ -103,15 +107,13 @@ def run_job(job: dict):
                               fillnan=job['fillnan'],
                               aqsnumerical=job['aqsnumerical'],
                               sites=job['sites'])
-
-            if chunk_idx == 0:
-                chunk.to_csv(job['output_path'])
-            else:
-                chunk.to_csv(job['output_path'], mode='a', header=False)
+            for AQS in unique_AQS:
+                subset = chunk[chunk["AQS_Code"] == AQS]
+                if chunk_idx == 0:
+                    subset.to_csv(job['output_path']+"_"+AQS+".csv")
+                else:
+                    subset.to_csv(job['output_path']+"_"+AQS+".csv", mode='a', header=False)
             print("Saved job "+str(job[year])+"_"+str(job[sites][0])+" chunk_idx: "+chunk_idx+" to disk.")
-            file.write("Saved job "+str(job[year])+"_"+str(job[sites][0])+" chunk_idx: "+chunk_idx+" to disk." +"\n")
-            file.flush()
-            #file.write("\n")
             chunk_idx += 1
         return
 
@@ -155,9 +157,6 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data/',
     n_procs = comm.Get_size()
 
     print("(mpi4py) rank: %d n_procs: %d" % (rank, n_procs))
-    file.write("(mpi4py) rank: %d n_procs: %d" % (rank, n_procs) +"\n")
-    file.flush()
-    #file.write("\n")
     sys.stdout.flush()
 
     if rank == 0:
@@ -170,40 +169,29 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data/',
         
         for year_idx, year in enumerate(range(year_begin, year_end)):
             input_name = "%s%d%s.csv" % (input_prefix, year, input_suffix)
-            df = pd.read_csv(input_path+input_name)
-            print("Read data "+input_path+input_name)
-            file.write("Read data "+input_path+input_name +"\n")
-            file.flush()
-            #file.write("\n")
             sys.stdout.flush()
-            unique_aqs = df['AQS_Code'].unique()
-            for aqs in unique_aqs:
-                if type(aqs) != float:
-                    transform_name = 'Transformed_' + input_name+'_'+aqs
-                    job = {'cmd': 'transform',
-                       'year': year,
-                       'dropnan': dropnan,
-                       'fillgps': fillgps,
-                       'naninvalid': naninvalid,
-                       'masknan': masknan,
-                       'fillnan': fillnan,
-                       'sites': [aqs],
-                       'aqsnumerical': aqsnumerical,
-                       'input_path': os.path.join(input_path, input_name),
-                       'output_path': os.path.join(output_path, transform_name),
-                       'chunksize': chunksize}
+            transform_name = 'Transformed_' + "%s%d%s" % (input_prefix, year, input_suffix)
 
-                    if houston:
-                        job['sites'] = HOUSTON
+            job = {'cmd': 'transform',
+                   'year': year,
+                   'dropnan': dropnan,
+                   'fillgps': fillgps,
+                   'naninvalid': naninvalid,
+                   'masknan': masknan,
+                   'fillnan': fillnan,
+                   'sites': [],
+                   'aqsnumerical': aqsnumerical,
+                   'input_path': os.path.join(input_path, input_name),
+                   'output_path': os.path.join(output_path, transform_name),
+                   'chunksize': chunksize}
 
+            if houston:
+                job['sites'] = HOUSTON
+                
+            jobs.append(job)
 
-                    jobs.append(job)
-                    print("Appended new job")
-                    file.write("Appended new job "+aqs +"\n")
-                    file.flush()
-                    #file.write("\n")
-                    sys.stdout.flush()
-
+        n_proc = 1
+                
         # Distribute one full round robin of jobs
         while len(jobs) > 0:
             comm.isend(jobs.pop(), dest=n_proc, tag=1)
@@ -226,7 +214,7 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data/',
                 outstanding_jobs += 1
 
             print("%d jobs left." % (len(jobs) + outstanding_jobs))
-            file.write("%d jobs left." % (len(jobs) + outstanding_jobs +"\n"))
+            #file.write("%d jobs left." % (len(jobs) + outstanding_jobs +"\n"))
             sys.stdout.flush()
 
         # Clean up
@@ -235,8 +223,8 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data/',
             req.wait()
 
         print("Node %d shutting down." % rank)
-        file.write("Node %d shutting down." % rank +"\n")
-        file.flush()
+        #file.write("Node %d shutting down." % rank +"\n")
+        #file.flush()
         #file.write("\n")
         sys.stdout.flush()
 
@@ -250,16 +238,16 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data/',
 
                 print("Got job: %s" % job['year'])
                 sys.stdout.flush()
-                file.write("Got job: %s" % job['year'] +"\n")
-                file.flush()
+                #file.write("Got job: %s" % job['year'] +"\n")
+                #file.flush()
                 #file.write("\n")
                 
 
                 run_job(job)
 
                 print("Finished job: %s" % job['year'])
-                file.write("Finished job: %s" % job['year'] +"\n")
-                file.flush()
+                #file.write("Finished job: %s" % job['year'] +"\n")
+                #file.flush()
                 #file.write("\n")
                 sys.stdout.flush()
 
@@ -269,8 +257,8 @@ def main(input_path: str = '/project/lindner/air-pollution/level3_data/',
 
             elif job['cmd'] == 'shutdown':
                 print("Node %d shutting down." % rank)
-                file.write("Node %d shutting down." % rank +"\n")
-                file.flush()
+                #file.write("Node %d shutting down." % rank +"\n")
+                #file.flush()
                 #file.write("\n")
                 sys.stdout.flush()
                 return

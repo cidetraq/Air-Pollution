@@ -1,0 +1,4 @@
+  File "python-scripts/exploration/descr_stats.py", line 65
+    file.write(("Number of rows in dataset "+df_name+"-"year+":"+str(len(df))))
+                                                           ^
+SyntaxError: invalid syntax
