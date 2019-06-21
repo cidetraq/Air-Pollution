@@ -1,10 +1,10 @@
 # Air-Pollution 
 
-!!!!!!!!!!!!!!!!
+
 For latest meeting notes, refer to the GitHub. Documentation will be updated on the cluster here on an ongoing basis. 
 GitHub: https://github.com/cidetraq/Air-Pollution
 Meeting notes: https://github.com/cidetraq/Air-Pollution/tree/master/notes/meetings
-!!!!!!!!!!!!!!!!
+
 
 Update 03.04.19: 
 Documentation is key. 
