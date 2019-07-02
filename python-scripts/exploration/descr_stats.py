@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 from pandas.api.types import is_numeric_dtype
 import plac
 import sys
+import resource
+
 
 # apply the datetime operations
 # 
@@ -84,7 +86,8 @@ def analyze(df_dict, year, output_path):
                 print(n) 
                 sys.stdout.flush()
                 plt.clf()
-
+        print("RAM used after "+df_name+" analyze:")
+        print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
 
 # <h2>Main
 
@@ -123,6 +126,8 @@ def main(testing_path,
     else:
         for year in range(year_begin,year_end):
             all_years.append(pd.read_csv(input_path+input_prefix+str(year)+".csv"))
+            print("RAM used to read in initial data:")
+            print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
     for index, df in enumerate(all_years):
         #Reduce memory usage
         df[['Latitude', 'Longitude', 'co', 'humid', 'no', 'no2', 'nox', 'o3', 'pm25', 'so2', 'solar', 'temp', 'winddir', 'windspd', 'dew']] = df[['Latitude', 'Longitude', 'co', 'humid', 'no', 'no2', 'nox', 'o3', 'pm25', 'so2', 'solar', 'temp', 'winddir', 'windspd', 'dew']].astype('float32')
@@ -131,9 +136,17 @@ def main(testing_path,
         df['day'] = pd.to_datetime(df['epoch'], unit='s').dt.day
         df['month'] = pd.to_datetime(df['epoch'], unit='s').dt.month
         daytime = df[(df['hour'] > 6) & (df['hour'] < 20)]
+        print("RAM used after creating daytime df:")
+        print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
         nighttime = df[(df['hour'] < 7) | (df['hour'] > 20)]
+        print("RAM used after creating nighttime df:")
+        print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
         highpol_months = df[(df['month'] >3) & (df['month'] < 11)]
+        print("RAM used after creating highpol_months df:")
+        print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
         higho3_days = get_higho3_days(df)
+        print("RAM used after creating high03_days df:")
+        print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
         subsets = {"df":df, "daytime":daytime, "nighttime":nighttime, "highpol_months":highpol_months, "higho3_days":higho3_days}
         year_range = [i for i in range(year_begin, year_end)]
         curr_year = year_range[index]

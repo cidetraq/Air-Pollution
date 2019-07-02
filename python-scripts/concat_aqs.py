@@ -31,7 +31,7 @@ HOUSTON = {'48_201_0051': {'Longitude': -95.474167, 'Latitude': 29.623889},
 # In[ ]:
 
 
-def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bool = False, dropnan: bool = False, masknan: float = None, fillnan: float = None, aqsnumerical: bool = False, sites = []) -> pd.DataFrame:
+def transform(df: pd.DataFrame, year: int, fillgps: bool = False, naninvalid: bool = False, dropnan: bool = False, masknan: float = None, fillnan: float = None, aqsnumerical: bool = False, site = []) -> pd.DataFrame:
 
     if aqsnumerical:
         df['AQS_Code'].str.replace('_', '')
@@ -45,14 +45,16 @@ def run_job(job: dict):
     if job['cmd'] == 'transform':
         output_df = pd.DataFrame()    
         for year_idx, year in enumerate(range(job['year_begin'], job['year_end'])):
+            path = job['input_path']+"Transformed_Data_"+str(year)+"_"+job['site']
+            print(path)
             try: 
-                aqs_year = pd.read_csv(job['input_path']+"Transformed_Data_"+str(job['sites']))
+                aqs_year = pd.read_csv(path)
             except BaseException:
                 continue
             output_df = pd.concat([output_df, aqs_year])
         output_df.to_csv(job['output_path'])                                
                           
-        print("Saved job "+str(job['sites'])+"to disk.")
+        print("Saved job "+str(job['site'])+"to disk.")
         return
 
 
@@ -69,7 +71,7 @@ def run_job(job: dict):
     masknan=("Mask nan rows", "option", "M", float),
     fillnan=("Fill nan rows", "option", "F", float),
     aqsnumerical=("Convert AQS code to numerical", "flag", "A"),
-    houston=("Only run for Houston sites", "flag", "H"),
+    houston=("Only run for Houston site", "flag", "H"),
     chunksize=("Process this many records at one time", "option", 'C', int)
 )
 def main(input_path: str = '/project/lindner/air-pollution/current/2019/data-formatted/mpi-test/',
@@ -110,12 +112,12 @@ def main(input_path: str = '/project/lindner/air-pollution/current/2019/data-for
         unique_aqs = []
         for file in all_files: 
             spl = file.split("_")
-            aqs = "".join(spl[3:])
+            aqs = "_".join(spl[3:])
             unique_aqs.append(aqs)
         for aqs in unique_aqs:
             transform_name = "Transformed_Data_"+str(aqs)
             job = {'cmd': 'transform',
-                   'sites': [str(aqs)],
+                   'site': str(aqs),
                    'aqsnumerical': aqsnumerical,
                    'input_path': input_path,
                    'year_begin': year_begin,
@@ -165,14 +167,14 @@ def main(input_path: str = '/project/lindner/air-pollution/current/2019/data-for
 
             if job['cmd'] == 'transform':
 
-                print("Got job: %s" % job['sites'])
+                print("Got job: %s" % job['site'])
                 sys.stdout.flush()                
                 run_job(job)
 
-                print("Finished job: %s" % job['sites'])
+                print("Finished job: %s" % job['site'])
                 sys.stdout.flush()
 
-                result = {'year': job['sites'], 'rank': rank}
+                result = {'year': job['site'], 'rank': rank}
                 req = comm.isend(result, dest=0, tag=2)
                 req.wait()
 
