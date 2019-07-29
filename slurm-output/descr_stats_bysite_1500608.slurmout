@@ -1,0 +1,765 @@
+RAM used after creating daytime df:
+1692952
+RAM used after creating nighttime df:
+1692952
+RAM used after creating highpol_months df:
+1692952
+Length of high_fiveminutes: 0
+RAM used after creating high03_days df:
+1692952
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0: 
+[19980. 19979. 19979. 19979. 19979. 19691. 19979. 19922.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0.1: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 159488.]
+Number of elements in each bin for 48_201_0695_overall_epoch: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 159488.]
+Number of elements in each bin for 48_201_0695_overall_hour: 
+[19908. 19916. 19944. 19944. 19944. 19944. 19944. 19944.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_day_of_year: 
+[13248. 13248. 13248. 15488. 27072. 26496. 26496. 24192.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_day: 
+[15552. 20736. 20736. 20736. 20736. 20736. 21248. 19008.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_month: 
+[ 8928. 16992.  8640. 18944. 17856. 35136. 17856. 35136.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_year: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 159488.]
+RAM used after 48_201_0695_overall analyze:
+1692952
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0: 
+[10788. 10871. 10789. 10822. 10862. 10656. 10871. 10765.     0.     0.]
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 86424.]
+Number of elements in each bin for 48_201_0695_daytime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 86424.]
+Number of elements in each bin for 48_201_0695_daytime_hour: 
+[    0.     0.     0. 13296. 13296. 19944. 13296. 13296. 13296.     0.]
+Number of elements in each bin for 48_201_0695_daytime_day_of_year: 
+[ 7176.  7176.  7176.  8424. 14664. 14352. 14352. 13104.     0.     0.]
+Number of elements in each bin for 48_201_0695_daytime_day: 
+[ 8424. 11232. 11232. 11232. 11232. 11232. 11544. 10296.     0.     0.]
+Number of elements in each bin for 48_201_0695_daytime_month: 
+[ 4836.  9204.  4680. 10296.  9672. 19032.  9672. 19032.     0.     0.]
+Number of elements in each bin for 48_201_0695_daytime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 86424.]
+RAM used after 48_201_0695_daytime analyze:
+1692952
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0: 
+[8364. 8280. 8350. 8330. 8280. 8216. 8280. 8316.    0.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 66416.]
+Number of elements in each bin for 48_201_0695_nighttime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 66416.]
+Number of elements in each bin for 48_201_0695_nighttime_hour: 
+[26544. 19928.     0.     0.     0.     0. 19944.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_day_of_year: 
+[ 5520.  5520.  5520.  6416. 11280. 11040. 11040. 10080.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_day: 
+[6480. 8640. 8640. 8640. 8640. 8640. 8816. 7920.    0.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_month: 
+[ 3720.  7080.  3600.  7856.  7440. 14640.  7440. 14640.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 66416.]
+RAM used after 48_201_0695_nighttime analyze:
+1692952
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0: 
+[    0.  9229. 17574. 17575. 17254.    38. 17574. 17575.  1613.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 98432.]
+Number of elements in each bin for 48_201_0695_highpol_months_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 98432.]
+Number of elements in each bin for 48_201_0695_highpol_months_hour: 
+[12276. 12284. 12312. 12312. 12312. 12312. 12312. 12312.     0.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day_of_year: 
+[    0.     0.  4032. 10080.  9792. 19232. 20160. 20160. 14976.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day: 
+[ 9504. 12672. 12672. 12672. 12672. 12672. 13184. 12384.     0.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_month: 
+[    0.     0.     0.  8640. 18944. 17856. 17856. 17280. 17856.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 98432.]
+RAM used after 48_201_0695_highpol_months analyze:
+1692952
+RAM used after 48_201_0695_higho3_days analyze:
+1895616
+RAM used after creating daytime df:
+1919788
+RAM used after creating nighttime df:
+1923388
+RAM used after creating highpol_months df:
+1932624
+Length of high_fiveminutes: 0
+RAM used after creating high03_days df:
+1939076
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0: 
+[17304. 17304. 17304. 17304. 17304. 17304. 17304. 17016.     0.   288.]
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0.1: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 137856.]
+Number of elements in each bin for 48_201_0695_overall_epoch: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 138432.]
+Number of elements in each bin for 48_201_0695_overall_hour: 
+[17280. 17280. 17292. 17316. 17316. 17316. 17316. 17316.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_day_of_year: 
+[15264. 14976. 14976. 14976. 16608. 29952. 29952.  1728.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_day: 
+[13536. 17280. 18048. 18432. 18432. 18432. 13824. 17856.  2592.     0.]
+Number of elements in each bin for 48_201_0695_overall_month: 
+[ 9504. 16992. 17568. 17568. 23808. 35136. 17856.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_year: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 138432.]
+RAM used after 48_201_0695_overall analyze:
+2143280
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0: 
+[9360. 9360. 9360. 9382. 9386. 9386. 9430. 9204.    0.  156.]
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 74712.]
+Number of elements in each bin for 48_201_0695_daytime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 75024.]
+Number of elements in each bin for 48_201_0695_daytime_hour: 
+[    0.     0.     0. 11532. 11544. 17316. 11544. 11544. 11544.     0.]
+Number of elements in each bin for 48_201_0695_daytime_day_of_year: 
+[ 8268.  8112.  8112.  8112.  9036. 16224. 16224.   936.     0.     0.]
+Number of elements in each bin for 48_201_0695_daytime_day: 
+[7332. 9360. 9816. 9984. 9984. 9984. 7488. 9672. 1404.    0.]
+Number of elements in each bin for 48_201_0695_daytime_month: 
+[ 5148.  9204.  9516.  9516. 12936. 19032.  9672.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_daytime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 75024.]
+RAM used after 48_201_0695_daytime analyze:
+2348988
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0: 
+[7205. 7204. 7205. 7204. 7204. 7205. 7173. 7116.    0.  120.]
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57396.]
+Number of elements in each bin for 48_201_0695_nighttime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57636.]
+Number of elements in each bin for 48_201_0695_nighttime_hour: 
+[23040. 17280.     0.     0.     0.     0. 17316.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_day_of_year: 
+[ 6360.  6240.  6240.  6240.  6876. 12480. 12480.   720.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_day: 
+[5640. 7200. 7476. 7680. 7680. 7680. 5760. 7440. 1080.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_month: 
+[ 3960.  7080.  7320.  7320.  9876. 14640.  7440.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57636.]
+RAM used after 48_201_0695_nighttime analyze:
+2552296
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0: 
+[    0.     0. 10656. 12192. 12192. 12192. 12192.  2208.  4319. 10849.]
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 76800.]
+Number of elements in each bin for 48_201_0695_highpol_months_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 76800.]
+Number of elements in each bin for 48_201_0695_highpol_months_hour: 
+[9576. 9576. 9588. 9612. 9612. 9612. 9612. 9612.    0.    0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day_of_year: 
+[    0.     0.  8064. 11232. 11520. 11232. 18624. 16128.     0.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day: 
+[ 6912.  9216.  9984. 10368. 10368. 10368.  7776. 10368.  1440.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_month: 
+[    0.     0.     0.  8640. 17568.  8928.  8928. 14880. 17856.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 76800.]
+RAM used after 48_201_0695_highpol_months analyze:
+2754800
+RAM used after 48_201_0695_higho3_days analyze:
+2957304
+RAM used after creating daytime df:
+2974200
+RAM used after creating nighttime df:
+2979664
+RAM used after creating highpol_months df:
+2987904
+Length of high_fiveminutes: 0
+RAM used after creating high03_days df:
+2993900
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0: 
+[13248. 13248. 13248. 13248. 13248. 13248. 13248. 12960.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0.1: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 105408.]
+Number of elements in each bin for 48_201_0695_overall_epoch: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 105984.]
+Number of elements in each bin for 48_201_0695_overall_hour: 
+[13248. 13248. 13248. 13248. 13248. 13248. 13248.  8832.  4416.     0.]
+Number of elements in each bin for 48_201_0695_overall_day_of_year: 
+[13536. 13248. 13248. 13248. 12960. 13248. 13248. 13248.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_day: 
+[10944. 13824. 13824. 13824. 13824. 13824. 10368. 13536.  2016.     0.]
+Number of elements in each bin for 48_201_0695_overall_month: 
+[ 9504. 17280.  8640. 17568.  8928. 17568. 17568.  8928.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_year: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 105984.]
+RAM used after 48_201_0695_overall analyze:
+3196404
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0: 
+[7176. 7176. 7176. 7176. 7176. 7175. 7168. 7029.    0.    0.]
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57096.]
+Number of elements in each bin for 48_201_0695_daytime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57408.]
+Number of elements in each bin for 48_201_0695_daytime_hour: 
+[    0.     0.     0.  8832.  8832. 13248.  8832.  8832.  8832.     0.]
+Number of elements in each bin for 48_201_0695_daytime_day_of_year: 
+[7332. 7176. 7176. 7176. 7020. 7176. 7176. 7176.    0.    0.]
+Number of elements in each bin for 48_201_0695_daytime_day: 
+[5928. 7488. 7488. 7488. 7488. 7488. 5616. 7332. 1092.    0.]
+Number of elements in each bin for 48_201_0695_daytime_month: 
+[5148. 9360. 4680. 9516. 4836. 9516. 9516. 4836.    0.    0.]
+Number of elements in each bin for 48_201_0695_daytime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57408.]
+RAM used after 48_201_0695_daytime analyze:
+3403216
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0: 
+[5520. 5520. 5520. 5520. 5520. 5520. 5520. 5400.    0.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 43920.]
+Number of elements in each bin for 48_201_0695_nighttime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 44160.]
+Number of elements in each bin for 48_201_0695_nighttime_hour: 
+[17664. 13248.     0.     0.     0.     0. 13248.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_day_of_year: 
+[5640. 5520. 5520. 5520. 5400. 5520. 5520. 5520.    0.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_day: 
+[4560. 5760. 5760. 5760. 5760. 5760. 4320. 5640.  840.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_month: 
+[3960. 7200. 3600. 7320. 3720. 7320. 7320. 3720.    0.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 44160.]
+RAM used after 48_201_0695_nighttime analyze:
+3606048
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0: 
+[    0.     0.  4767. 10324. 10325. 10325. 10324. 10325.  5242.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 61632.]
+Number of elements in each bin for 48_201_0695_highpol_months_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 61632.]
+Number of elements in each bin for 48_201_0695_highpol_months_hour: 
+[7704. 7704. 7704. 7704. 7704. 7704. 7704. 5136. 2568.    0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day_of_year: 
+[    0.     0.  4608. 10368. 10368. 10368. 10368. 10368.  5184.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day: 
+[6048. 8064. 8064. 8064. 8064. 8064. 6048. 8064. 1152.    0.]
+Number of elements in each bin for 48_201_0695_highpol_months_month: 
+[    0.     0.     0. 17568.  8640.  8928. 17568.  8928.     0.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 61632.]
+RAM used after 48_201_0695_highpol_months analyze:
+3811876
+RAM used after 48_201_0695_higho3_days analyze:
+4014400
+RAM used after creating daytime df:
+4037132
+RAM used after creating nighttime df:
+4042464
+RAM used after creating highpol_months df:
+4050852
+Length of high_fiveminutes: 0
+RAM used after creating high03_days df:
+4055848
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0: 
+[1.3212e+04 1.3212e+04 1.3212e+04 1.3212e+04 1.3212e+04 1.3212e+04
+ 1.3212e+04 1.3210e+04 2.0000e+00 0.0000e+00]
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0.1: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 105408.]
+Number of elements in each bin for 48_201_0695_overall_epoch: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 105696.]
+Number of elements in each bin for 48_201_0695_overall_hour: 
+[13212. 13212. 13212. 13212. 13212. 13212. 13212.  8808.  4404.     0.]
+Number of elements in each bin for 48_201_0695_overall_day_of_year: 
+[13248. 13248. 13248. 13248. 13248. 13248. 13248. 12960.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_day: 
+[10656. 13824. 13824. 13824. 13824. 13824. 10368. 13248.  2304.     0.]
+Number of elements in each bin for 48_201_0695_overall_month: 
+[ 9216. 16992.  8640. 17568.  8928. 17568. 17568.  9216.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_year: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 105696.]
+RAM used after 48_201_0695_overall analyze:
+4258352
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0: 
+[7176. 7176. 7151. 7152. 7151. 7152. 7152. 7142.    0.    0.]
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57096.]
+Number of elements in each bin for 48_201_0695_daytime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57252.]
+Number of elements in each bin for 48_201_0695_daytime_hour: 
+[    0.     0.     0.  8808.  8808. 13212.  8808.  8808.  8808.     0.]
+Number of elements in each bin for 48_201_0695_daytime_day_of_year: 
+[7176. 7176. 7176. 7176. 7176. 7176. 7176. 7020.    0.    0.]
+Number of elements in each bin for 48_201_0695_daytime_day: 
+[5772. 7488. 7488. 7488. 7488. 7488. 5616. 7176. 1248.    0.]
+Number of elements in each bin for 48_201_0695_daytime_month: 
+[4992. 9204. 4680. 9516. 4836. 9516. 9516. 4992.    0.    0.]
+Number of elements in each bin for 48_201_0695_daytime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57252.]
+RAM used after 48_201_0695_daytime analyze:
+4464668
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0: 
+[5484. 5520. 5520. 5496. 5463. 5481. 5520. 5484.   72.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 43920.]
+Number of elements in each bin for 48_201_0695_nighttime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 44040.]
+Number of elements in each bin for 48_201_0695_nighttime_hour: 
+[17616. 13212.     0.     0.     0.     0. 13212.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_day_of_year: 
+[5520. 5520. 5520. 5520. 5520. 5520. 5520. 5400.    0.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_day: 
+[4440. 5760. 5760. 5760. 5760. 5760. 4320. 5520.  960.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_month: 
+[3840. 7080. 3600. 7320. 3720. 7320. 7320. 3840.    0.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 44040.]
+RAM used after 48_201_0695_nighttime analyze:
+4667336
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0: 
+[    0.     0.  4968. 10296. 10296. 10296. 10296. 10295.  5185.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 61632.]
+Number of elements in each bin for 48_201_0695_highpol_months_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 61632.]
+Number of elements in each bin for 48_201_0695_highpol_months_hour: 
+[7704. 7704. 7704. 7704. 7704. 7704. 7704. 5136. 2568.    0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day_of_year: 
+[    0.     0.  4896. 10368. 10080. 10368. 10368. 10368.  5184.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day: 
+[6048. 8064. 8064. 8064. 8064. 8064. 6048. 8064. 1152.    0.]
+Number of elements in each bin for 48_201_0695_highpol_months_month: 
+[    0.     0.     0. 17568.  8640.  8928. 17568.  8928.     0.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 61632.]
+RAM used after 48_201_0695_highpol_months analyze:
+4886612
+RAM used after 48_201_0695_higho3_days analyze:
+5089228
+RAM used after creating daytime df:
+5130768
+RAM used after creating nighttime df:
+5139772
+RAM used after creating highpol_months df:
+5157788
+Length of high_fiveminutes: 0
+RAM used after creating high03_days df:
+5167616
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0: 
+[22325. 22325. 22325. 22324. 22613. 22325. 22324. 22325.    58.     0.]
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0.1: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 178368.]
+Number of elements in each bin for 48_201_0695_overall_epoch: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 178944.]
+Number of elements in each bin for 48_201_0695_overall_hour: 
+[22356. 22356. 22356. 22356. 22356. 22380. 22392. 22392.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_day_of_year: 
+[13248. 12672. 18816. 25920. 25344. 25344. 25920. 25344.  6336.     0.]
+Number of elements in each bin for 48_201_0695_overall_day: 
+[17856. 23040. 23040. 23040. 23040. 23712. 24192. 21024.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_month: 
+[ 9504.  8064. 20256. 17856. 35136. 17856. 35136. 17280. 17856.     0.]
+Number of elements in each bin for 48_201_0695_overall_year: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 178944.]
+RAM used after 48_201_0695_overall analyze:
+5389692
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0: 
+[12070. 12110. 12066. 12114. 12216. 12107. 12073. 12103.    65.     0.]
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 96612.]
+Number of elements in each bin for 48_201_0695_daytime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 96924.]
+Number of elements in each bin for 48_201_0695_daytime_hour: 
+[    0.     0.     0. 14904. 14904. 22356. 14904. 14928. 14928.     0.]
+Number of elements in each bin for 48_201_0695_daytime_day_of_year: 
+[ 7176.  6864. 10188. 13728. 14040. 13728. 13728. 13728.  3744.     0.]
+Number of elements in each bin for 48_201_0695_daytime_day: 
+[ 9672. 12480. 12480. 12480. 12480. 12840. 13104. 11388.     0.     0.]
+Number of elements in each bin for 48_201_0695_daytime_month: 
+[ 5148.  4368. 10968.  9672. 19032.  9672. 19032.  9360.  9672.     0.]
+Number of elements in each bin for 48_201_0695_daytime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 96924.]
+RAM used after 48_201_0695_daytime analyze:
+5601684
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0: 
+[9324. 9247. 9353. 9240. 9406. 9350. 9240. 9350.   46.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 74316.]
+Number of elements in each bin for 48_201_0695_nighttime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 74556.]
+Number of elements in each bin for 48_201_0695_nighttime_hour: 
+[29808. 22356.     0.     0.     0.     0. 22392.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_day_of_year: 
+[ 5520.  5280.  7836. 10560. 10800. 10560. 10560. 10560.  2880.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_day: 
+[ 7440.  9600.  9600.  9600.  9600.  9876. 10080.  8760.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_month: 
+[ 3960.  3360.  8436.  7440. 14640.  7440. 14640.  7200.  7440.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 74556.]
+RAM used after 48_201_0695_nighttime analyze:
+5804608
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0: 
+[    0. 13949. 19934. 19935.  7814. 14198. 19934. 19935.  1613.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0.1: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 117312.]
+Number of elements in each bin for 48_201_0695_highpol_months_epoch: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 117312.]
+Number of elements in each bin for 48_201_0695_highpol_months_hour: 
+[14652. 14652. 14652. 14652. 14652. 14676. 14688. 14688.     0.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day_of_year: 
+[    0.     0.  4608. 19392. 20160. 20736. 20736. 20160. 11520.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day: 
+[11232. 14976. 14976. 14976. 14976. 15648. 16128. 14400.     0.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_month: 
+[    0.     0.     0. 11328. 17856. 17280. 35712. 17280. 17856.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_year: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 117312.]
+RAM used after 48_201_0695_highpol_months analyze:
+6024280
+RAM used after 48_201_0695_higho3_days analyze:
+6226928
+RAM used after creating daytime df:
+6242432
+RAM used after creating nighttime df:
+6245184
+RAM used after creating highpol_months df:
+6252496
+Length of high_fiveminutes: 0
+RAM used after creating high03_days df:
+6257440
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0: 
+[13212. 13212. 13212. 13212. 13212. 13212. 13212. 12924.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0.1: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 105120.]
+Number of elements in each bin for 48_201_0695_overall_epoch: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 105696.]
+Number of elements in each bin for 48_201_0695_overall_hour: 
+[13212. 13212. 13212. 13212. 13212. 13212. 13212.  8808.  4404.     0.]
+Number of elements in each bin for 48_201_0695_overall_day_of_year: 
+[13536. 13248. 13248. 13248. 12960. 13248. 13248. 12960.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_day: 
+[10944. 13824. 13824. 13824. 13824. 13824. 10368. 13248.  2016.     0.]
+Number of elements in each bin for 48_201_0695_overall_month: 
+[ 9504. 16992. 17568.  8640. 17856. 17568. 17568.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_year: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 105696.]
+RAM used after 48_201_0695_overall analyze:
+6462684
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0: 
+[7176. 7176. 7151. 7152. 7151. 7152. 7152. 6986.    0.    0.]
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 56940.]
+Number of elements in each bin for 48_201_0695_daytime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57252.]
+Number of elements in each bin for 48_201_0695_daytime_hour: 
+[    0.     0.     0.  8808.  8808. 13212.  8808.  8808.  8808.     0.]
+Number of elements in each bin for 48_201_0695_daytime_day_of_year: 
+[7332. 7176. 7176. 7176. 7020. 7176. 7176. 7020.    0.    0.]
+Number of elements in each bin for 48_201_0695_daytime_day: 
+[5928. 7488. 7488. 7488. 7488. 7488. 5616. 7176. 1092.    0.]
+Number of elements in each bin for 48_201_0695_daytime_month: 
+[5148. 9204. 9516. 4680. 9672. 9516. 9516.    0.    0.    0.]
+Number of elements in each bin for 48_201_0695_daytime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57252.]
+RAM used after 48_201_0695_daytime analyze:
+6666916
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0: 
+[5484. 5520. 5520. 5496. 5463. 5481. 5520. 5436.    0.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 43800.]
+Number of elements in each bin for 48_201_0695_nighttime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 44040.]
+Number of elements in each bin for 48_201_0695_nighttime_hour: 
+[17616. 13212.     0.     0.     0.     0. 13212.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_day_of_year: 
+[5640. 5520. 5520. 5520. 5400. 5520. 5520. 5400.    0.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_day: 
+[4560. 5760. 5760. 5760. 5760. 5760. 4320. 5520.  840.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_month: 
+[3960. 7080. 7320. 3600. 7440. 7320. 7320.    0.    0.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 44040.]
+RAM used after 48_201_0695_nighttime analyze:
+6869928
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0: 
+[    0.     0.  4968. 10296. 10296. 10296. 10296. 10295.  5185.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 61632.]
+Number of elements in each bin for 48_201_0695_highpol_months_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 61632.]
+Number of elements in each bin for 48_201_0695_highpol_months_hour: 
+[7704. 7704. 7704. 7704. 7704. 7704. 7704. 5136. 2568.    0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day_of_year: 
+[    0.     0.  4896. 10368. 10080. 10368. 10368. 10368.  5184.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day: 
+[6048. 8064. 8064. 8064. 8064. 8064. 6048. 8064. 1152.    0.]
+Number of elements in each bin for 48_201_0695_highpol_months_month: 
+[    0.     0.     0. 17568.  8640.  8928. 17568.  8928.     0.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 61632.]
+RAM used after 48_201_0695_highpol_months analyze:
+7072952
+RAM used after 48_201_0695_higho3_days analyze:
+7275456
+RAM used after creating daytime df:
+7302460
+RAM used after creating nighttime df:
+7312940
+RAM used after creating highpol_months df:
+7332508
+Length of high_fiveminutes: 0
+RAM used after creating high03_days df:
+7344256
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0: 
+[26300. 26299. 26299. 26376. 26222. 26299. 26299. 26299.    39.     0.]
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0.1: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 210144.]
+Number of elements in each bin for 48_201_0695_overall_epoch: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 210432.]
+Number of elements in each bin for 48_201_0695_overall_hour: 
+[26280. 26280. 26292. 26316. 26316. 26316. 26316. 26316.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_day_of_year: 
+[25536. 26496. 26496. 25920. 26496. 26496. 26496. 25920.   576.     0.]
+Number of elements in each bin for 48_201_0695_overall_day: 
+[20352. 27648. 27648. 27648. 27648. 27648. 20736. 27072.  4032.     0.]
+Number of elements in each bin for 48_201_0695_overall_month: 
+[17472. 34560. 17280. 35136. 17856. 35136. 35136. 17856.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_year: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 210432.]
+RAM used after 48_201_0695_overall analyze:
+7575724
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0: 
+[14214. 14298. 14232. 14268. 14268. 14244. 14298. 14202.     0.     0.]
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0.1: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 113868.]
+Number of elements in each bin for 48_201_0695_daytime_epoch: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 114024.]
+Number of elements in each bin for 48_201_0695_daytime_hour: 
+[    0.     0.     0. 17532. 17544. 26316. 17544. 17544. 17544.     0.]
+Number of elements in each bin for 48_201_0695_daytime_day_of_year: 
+[13872. 14352. 14352. 14352. 14352. 14352. 14040. 14352.     0.     0.]
+Number of elements in each bin for 48_201_0695_daytime_day: 
+[11064. 14976. 14976. 14976. 14976. 14976. 11232. 14664.  2184.     0.]
+Number of elements in each bin for 48_201_0695_daytime_month: 
+[ 9504. 18720.  9360. 19032.  9672. 19032. 19032.  9672.     0.     0.]
+Number of elements in each bin for 48_201_0695_daytime_year: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 114024.]
+RAM used after 48_201_0695_daytime analyze:
+7789352
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0: 
+[11004. 10920. 10965. 11079. 10803. 10989. 10920. 10956.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 87516.]
+Number of elements in each bin for 48_201_0695_nighttime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 87636.]
+Number of elements in each bin for 48_201_0695_nighttime_hour: 
+[35040. 26280.     0.     0.     0.     0. 26316.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_day_of_year: 
+[10596. 11040. 11040. 10800. 11040. 11040. 10800. 11040.   240.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_day: 
+[ 8436. 11520. 11520. 11520. 11520. 11520.  8640. 11280.  1680.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_month: 
+[ 7236. 14400.  7200. 14640.  7440. 14640. 14640.  7440.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 87636.]
+RAM used after 48_201_0695_nighttime analyze:
+7991856
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0: 
+[  500. 26707. 26707.  7718.  2304. 26707. 26707.  5914.     0.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0.1: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 123264.]
+Number of elements in each bin for 48_201_0695_highpol_months_epoch: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 123264.]
+Number of elements in each bin for 48_201_0695_highpol_months_hour: 
+[15408. 15408. 15408. 15408. 15408. 15408. 15408. 10272.  5136.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day_of_year: 
+[    0.     0.  9216. 20736. 20736. 20736. 20736. 20736. 10368.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day: 
+[12096. 16128. 16128. 16128. 16128. 16128. 12096. 16128.  2304.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_month: 
+[    0.     0.     0. 35136. 17280. 17856. 35136. 17856.     0.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_year: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 123264.]
+RAM used after 48_201_0695_highpol_months analyze:
+8208988
+RAM used after 48_201_0695_higho3_days analyze:
+8411492
+RAM used after creating daytime df:
+8422092
+RAM used after creating nighttime df:
+8427384
+RAM used after creating highpol_months df:
+8435724
+Length of high_fiveminutes: 0
+RAM used after creating high03_days df:
+8440724
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0: 
+[1.3212e+04 1.3212e+04 1.3212e+04 1.3212e+04 1.3212e+04 1.3212e+04
+ 1.3212e+04 1.2923e+04 1.0000e+00 0.0000e+00]
+Number of elements in each bin for 48_201_0695_overall_Unnamed: 0.1: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 105120.]
+Number of elements in each bin for 48_201_0695_overall_epoch: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 105696.]
+Number of elements in each bin for 48_201_0695_overall_hour: 
+[13212. 13212. 13212. 13212. 13212. 13212. 13212.  8808.  4404.     0.]
+Number of elements in each bin for 48_201_0695_overall_day_of_year: 
+[13536. 13248. 13248. 13248. 12960. 13248. 13248. 12960.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_day: 
+[10944. 13824. 13824. 13824. 13824. 13824. 10368. 13248.  2016.     0.]
+Number of elements in each bin for 48_201_0695_overall_month: 
+[ 9504. 16992. 17568.  8640. 17856. 17568. 17568.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_overall_year: 
+[     0.      0.      0.      0.      0.      0.      0.      0.      0.
+ 105696.]
+RAM used after 48_201_0695_overall analyze:
+8643832
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0: 
+[7176. 7176. 7151. 7152. 7151. 7152. 7152. 6986.    0.    0.]
+Number of elements in each bin for 48_201_0695_daytime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 56940.]
+Number of elements in each bin for 48_201_0695_daytime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57252.]
+Number of elements in each bin for 48_201_0695_daytime_hour: 
+[    0.     0.     0.  8808.  8808. 13212.  8808.  8808.  8808.     0.]
+Number of elements in each bin for 48_201_0695_daytime_day_of_year: 
+[7332. 7176. 7176. 7176. 7020. 7176. 7176. 7020.    0.    0.]
+Number of elements in each bin for 48_201_0695_daytime_day: 
+[5928. 7488. 7488. 7488. 7488. 7488. 5616. 7176. 1092.    0.]
+Number of elements in each bin for 48_201_0695_daytime_month: 
+[5148. 9204. 9516. 4680. 9672. 9516. 9516.    0.    0.    0.]
+Number of elements in each bin for 48_201_0695_daytime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 57252.]
+RAM used after 48_201_0695_daytime analyze:
+8850292
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0: 
+[5484. 5520. 5520. 5496. 5463. 5481. 5520. 5400.   36.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 43800.]
+Number of elements in each bin for 48_201_0695_nighttime_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 44040.]
+Number of elements in each bin for 48_201_0695_nighttime_hour: 
+[17616. 13212.     0.     0.     0.     0. 13212.     0.     0.     0.]
+Number of elements in each bin for 48_201_0695_nighttime_day_of_year: 
+[5640. 5520. 5520. 5520. 5400. 5520. 5520. 5400.    0.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_day: 
+[4560. 5760. 5760. 5760. 5760. 5760. 4320. 5520.  840.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_month: 
+[3960. 7080. 7320. 3600. 7440. 7320. 7320.    0.    0.    0.]
+Number of elements in each bin for 48_201_0695_nighttime_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 44040.]
+RAM used after 48_201_0695_nighttime analyze:
+9053304
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0: 
+[    0.     0.  4968. 10296. 10296. 10296. 10296. 10295.  5185.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_Unnamed: 0.1: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 61632.]
+Number of elements in each bin for 48_201_0695_highpol_months_epoch: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 61632.]
+Number of elements in each bin for 48_201_0695_highpol_months_hour: 
+[7704. 7704. 7704. 7704. 7704. 7704. 7704. 5136. 2568.    0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day_of_year: 
+[    0.     0.  4896. 10368. 10080. 10368. 10368. 10368.  5184.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_day: 
+[6048. 8064. 8064. 8064. 8064. 8064. 6048. 8064. 1152.    0.]
+Number of elements in each bin for 48_201_0695_highpol_months_month: 
+[    0.     0.     0. 17568.  8640.  8928. 17568.  8928.     0.     0.]
+Number of elements in each bin for 48_201_0695_highpol_months_year: 
+[    0.     0.     0.     0.     0.     0.     0.     0.     0. 61632.]
+python-scripts/exploration/descr_stats_bysite.py:65: FutureWarning: The signature of `Series.to_csv` was aligned to that of `DataFrame.to_csv`, and argument 'header' will change its default value from False to True: please pass an explicit value to suppress this warning.
+  percent_missing.to_csv(output_path+year+'-'+df_name+'-'+"percent_missing.csv")
+python-scripts/exploration/descr_stats_bysite.py:72: FutureWarning: Sorting because non-concatenation axis is not aligned. A future version
+of pandas will change to not sort by default.
+
+To accept the future behavior, pass 'sort=False'.
+
+To retain the current behavior and silence the warning, pass 'sort=True'.
+
+  month_nas = pd.concat([month_nas,nas], axis=1)
+python-scripts/exploration/descr_stats_bysite.py:65: FutureWarning: The signature of `Series.to_csv` was aligned to that of `DataFrame.to_csv`, and argument 'header' will change its default value from False to True: please pass an explicit value to suppress this warning.
+  percent_missing.to_csv(output_path+year+'-'+df_name+'-'+"percent_missing.csv")
+python-scripts/exploration/descr_stats_bysite.py:85: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`).
+  fig, ax = plt.subplots()
+/project/lindner/air-pollution/current/2019/our-conda/lib/python3.6/site-packages/pandas/plotting/_tools.py:197: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`).
+  fig = plt.figure(**fig_kw)
+python-scripts/exploration/descr_stats_bysite.py:72: FutureWarning: Sorting because non-concatenation axis is not aligned. A future version
+of pandas will change to not sort by default.
+
+To accept the future behavior, pass 'sort=False'.
+
+To retain the current behavior and silence the warning, pass 'sort=True'.
+
+  month_nas = pd.concat([month_nas,nas], axis=1)
+python-scripts/exploration/descr_stats_bysite.py:75: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`).
+  fig, ax = plt.subplots()
+/project/lindner/air-pollution/current/2019/our-conda/lib/python3.6/site-packages/pandas/plotting/_core.py:304: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`).
+  fig = self.plt.figure(figsize=self.figsize)
+RAM used after 48_201_0695_highpol_months analyze:
+9256008
+RAM used after 48_201_0695_higho3_days analyze:
+9458640
+RAM used after creating daytime df:
+9458640
+RAM used after creating nighttime df:
+9458640
+RAM used after creating highpol_months df:
+9458640
+Length of high_fiveminutes: 20311
+Traceback (most recent call last):
+  File "/project/lindner/air-pollution/current/2019/our-conda/lib/python3.6/site-packages/pandas/core/indexing.py", line 2200, in _get_list_axis
+    return self.obj._take(key, axis=axis)
+  File "/project/lindner/air-pollution/current/2019/our-conda/lib/python3.6/site-packages/pandas/core/generic.py", line 3359, in _take
+    verify=True)
+  File "/project/lindner/air-pollution/current/2019/our-conda/lib/python3.6/site-packages/pandas/core/internals/managers.py", line 1341, in take
+    indexer = maybe_convert_indices(indexer, n)
+  File "/project/lindner/air-pollution/current/2019/our-conda/lib/python3.6/site-packages/pandas/core/indexing.py", line 2615, in maybe_convert_indices
+    raise IndexError("indices are out-of-bounds")
+IndexError: indices are out-of-bounds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python-scripts/exploration/descr_stats_bysite.py", line 181, in <module>
+    plac.call(main)
+  File "/project/lindner/air-pollution/current/2019/our-conda/lib/python3.6/site-packages/plac_core.py", line 330, in call
+    cmd, result = parser.consume(arglist)
+  File "/project/lindner/air-pollution/current/2019/our-conda/lib/python3.6/site-packages/plac_core.py", line 207, in consume
+    return cmd, self.func(*(args + varargs + extraopts), **kwargs)
+  File "python-scripts/exploration/descr_stats_bysite.py", line 165, in main
+    higho3_days = get_higho3_days(df)
+  File "python-scripts/exploration/descr_stats_bysite.py", line 46, in get_higho3_days
+    high_o3_days = df.iloc[high_o3_index[high_o3_index['day'] == True].index]
+  File "/project/lindner/air-pollution/current/2019/our-conda/lib/python3.6/site-packages/pandas/core/indexing.py", line 1500, in __getitem__
+    return self._getitem_axis(maybe_callable, axis=axis)
+  File "/project/lindner/air-pollution/current/2019/our-conda/lib/python3.6/site-packages/pandas/core/indexing.py", line 2221, in _getitem_axis
+    return self._get_list_axis(key, axis=axis)
+  File "/project/lindner/air-pollution/current/2019/our-conda/lib/python3.6/site-packages/pandas/core/indexing.py", line 2203, in _get_list_axis
+    raise IndexError("positional indexers are out-of-bounds")
+IndexError: positional indexers are out-of-bounds

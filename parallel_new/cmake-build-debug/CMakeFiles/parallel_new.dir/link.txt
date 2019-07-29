@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/parallel_new.dir/main.cpp.o  -o parallel_new 
